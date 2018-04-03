@@ -1,0 +1,61 @@
+/**
+
+Example for 3 quantifiers.
+
+Quantifiers are indexed from 1 (left) to 3 (right).
+
+universal(x)   ... x is a universal quantifier.
+existential(x) ... x is an existential quantifier.
+dependsOn(x,y) ... The domain definition of y depends on the variable
+                   quantified over by x, where x < y (naturally).
+                   Transitivity is ensured by the encoding.
+related(x,y)   ... The variables that quantifiers x and y range over are
+                   related, where x < y (symmetry breaking).
+moveTo(x,y)    ... Quantifier x should be moved to position y.
+
+**/
+
+// - - - - - - INSTANCE - - - - - -
+
+(universal(1) & existential(2) & universal(3))
+
+// - - - - - - ENCODING - - - - - -
+
+// At one position there can be at most one quantifier.
+(forall #p in [1...3] forall #q1 in [1...3] forall #q2 in [#q1+1...3]
+    (moveTo(#q1,#p) -> ~moveTo(#q2,#p))
+)
+
+// Dependency is transitive.
+(forall #ql in [1...3] forall #qm in [#ql+1...3] forall #qr in [#qm+1...3]
+    (dependsOn(#ql,#qm) & dependsOn(#qm,#qr)) -> dependsOn(#ql,#qr)
+)
+
+// For any pair of quantifiers, the left one cannot depend on the right one.
+(forall #ql in [1...3] forall #qr in [#ql+1...3] (~dependsOn(#qr,#ql)))
+
+// Dependent quantifiers cannot move over its dependency.
+// Related quantifiers cannot change their relative order.
+(forall #ql in [1...3] forall #qr in [#ql+1...3]
+    (
+        (related(#ql,#qr) | dependsOn(#ql,#qr))
+        ->
+        ~(exists #l in [1...3] exists #r in [#l+1...3]
+            moveTo(#ql,#r) & moveTo(#qr,#l)
+        )
+    )
+)
+
+// Every quantifier is either universal or existential.
+(forall #q in [1...3] (universal(#q) ^ existential(#q)))
+
+// Every quantifier must be moved to some position.
+(forall #q in [1...3] exists #p in [1...3] moveTo(#q,#p))
+
+// An existential quantifier that is placed to the
+// left of a universal one is considered "bad".
+(forall #ql in [1...3] forall #qr in [1...3]
+    (forall #l in [1...3] forall #r in [#l+1...3]
+        ((moveTo(#ql,#l) & moveTo(#qr,#r) & existential(#ql) & universal(#qr)) -> bad(#qr))
+    )
+)

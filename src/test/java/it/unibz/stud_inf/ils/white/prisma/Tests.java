@@ -1,0 +1,135 @@
+package it.unibz.stud_inf.ils.white.prisma;
+
+import it.unibz.stud_inf.ils.white.prisma.ast.Formula;
+import it.unibz.stud_inf.ils.white.prisma.parser.Parser;
+import org.antlr.v4.runtime.CharStreams;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.of;
+
+class Tests {
+	static Stream<? extends Arguments> groundInstances() {
+		return Stream.of(
+			of("~q",           1, 1, 1),
+			of("p | q",        2, 1, 3),
+			of("p & q",        2, 2, 1),
+			of("p ^ q",        2, 2, 2),
+			of("p & ~p",       1, 2, 0),
+			of("~~~~q",        1, 1, 1),
+			of("p -> q",       2, 1, 3),
+			of("p <-> q",      2, 2, 2),
+			of("p ? q : r",    3, 2, 4),
+			of("p <- q",       2, 1, 3),
+			of("~(p -> q)",    2, 2, 1),
+			of("true & false", 1, 2, 0),
+			of("1 > 2",        1, 2, 0),
+
+			of("~(~(~p & ~q) & ~(~q & r))", 3 + 2, 7, 3), // Yields DNF for NNF.
+			of("~(p -> s -> (q & r))", 4, 2, 9)
+		);
+	}
+
+	static Stream<? extends Arguments> nonGroundInstances() {
+		return Stream.of(
+			of("forall @X in {a,b} ~(@X & (exists #Y in [1...3] (t(#Y) -> q(#Y))))", -1, -1, -1),
+			of("forall $x in {a,b} exists $y in {$x,c} p($x,$y)", -1, -1, -1), // noswitch, fine, related, dependent
+			of("exists $x in {a,b} forall $y in {$x,c} p($x,$y)", -1, -1, -1), // noswitch, related, dependent
+			of("exists $x in {a,b} forall $y in {c,d} p($x,$y)", -1, -1, -1), // noswitch, dependent
+			of("exists $x in {a,b} forall $y in {c,d} (p($x) & p($y))", -1, -1, -1), // noswitch, fine, related, dependent
+
+			of("exists $y in {a,b,c} forall $x in {a,b,c} (q & (p($x) & p($y)))", -1, -1, -1), // switch
+			of("forall $x in {a,b,c} exists $y in {a,b,c} (q & (p($x) & p($y)))", -1, -1, -1), // noswitch
+			of("exists $y in {a,b,c} exists $z in {a,b,c} forall $x in {a,b,c} (q & (p($x) & p($y)))", -1, -1, -1),  // switch, eliminate
+
+			of("exists $y in {a,b,c} forall $x in {a,b,c} (q | (p($x) | p($y)))", -1, -1, -1),
+			of("forall $x in {a,b,c} exists $y in {a,b,c} (q | (p($x) | p($y)))", -1, -1, -1),
+			of("forall #X in [1...3] p(#X)", -1, -1, -1),
+			of("forall #X in [1...3] forall #Y in [1...3] p(#X,#Y)", -1, -1, -1),
+			of("forall #Y in [1...3] exists #X in [1...3] p(#Y,#X,#Y+#X)", -1, -1, -1),
+			of("exists #X in [1...3] p(#X)", -1, -1, -1),
+			of("forall $Y in {a,b,c} exists #X in [1...3] p($Y,#X)", -1, -1, -1),
+			of("forall $X in {a,b} exists $Y in {c,d} forall $Z in {e,f} (p($X) | p($Y) | p($Z))", -1, -1, -1),
+			of("forall $X in {a,b} exists $Y in {c,d} p($X,$Y)", -1, -1, -1),
+			of("forall @X in {a,b} (@X & (exists #Y in [1...3] t(#Y)))", -1, -1, -1),
+			of("~(exists $X in {a,b} p($X))", -1, -1, -1),
+			of("(forall $x in {a,b} (exists $y in {a,b} phi($y)) | ((exists $z in {a,b} psi($z)) -> rho($x)))", -1, -1, -1),
+			of("forall $x in {a,b} ((exists $y in {a,b} phi($y)) | ((exists $z in {a,b} psi($z)) -> rho($x)))", -1, -1, -1),
+			of("exists #x in [2...6] (#x < 4 & p(#x))", -1, -1, -1),
+			of("exists $y in {a,b,c} forall $x in {a,b,c} (p($x) & p($y))", -1, -1, -1),
+			of("forall $x in {a,b,c} exists $y in {a,b,c} (p($x) & p($y))", -1, -1, -1)
+		);
+	}
+
+	@ParameterizedTest
+	@MethodSource("groundInstances")
+	void solveGround(String formula, int vars, int clauses, int models) {
+		solveAndAssert(formula, vars, clauses, models);
+	}
+
+	@ParameterizedTest
+	@MethodSource("nonGroundInstances")
+	void solveNonGround(String formula, int vars, int clauses, int models) {
+		solveAndAssert(formula, vars, clauses, models);
+	}
+
+	void solveAndAssert(String formula, int vars, int clauses, int models) {
+		Formula f = Parser.parse(formula);
+		System.out.println("Input:                 " + f);
+		System.out.println("Normalized (&/|/~):    " + (f = f.normalize()));
+		System.out.println("Standardized apart:    " + (f = f.standardize()));
+		System.out.println("Quantifiers minimized: " + (f = f.pushQuantifiersDown()));
+		System.out.println("Ground:                " + (f = f.ground()));
+
+		final ConjunctiveNormalForm cnf = f.tseitin();
+		System.out.println("CNF size:              " + cnf.getVariableCount() + " " + cnf.getClauseCount());
+		System.out.println("CNF follows:");
+		System.out.println(cnf);
+		System.out.println("Models follow:");
+		cnf.printModelsTo(System.out, Long.MAX_VALUE);
+
+		if (vars >= 0) {
+			assertEquals(vars, cnf.getVariableCount(), "Number of Variables");
+		}
+		if (clauses >= 0) {
+			assertEquals(clauses, cnf.getClauseCount(), "Number of Clauses");
+		}
+		if (models >= 0) {
+			assertEquals(models, cnf.computeModels().count(), "Number of Models");
+		}
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"(forall @X in a, b { }"})
+	void parse(final String formula) {
+		assertThrows(RuntimeException.class, () -> Parser.parse(formula));
+	}
+
+	@Test
+	void parseExplosion() {
+		for (int n = 3; n < 11; n++) {
+			final String in = String.join(" ^ ", Collections.nCopies(n, "p"));
+			final String out = Parser.parse(in).toConjunctiveNormalForm().toString();
+			final int ratio = out.length() / in.length();
+			assertTrue(30 < ratio && ratio < 60, "CNF does not explode in size.");
+		}
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"/sudoku.bool", "/sudoku-empty.bool", "/quants-3.bool", "/quants-5.bool"})
+	void instance(String fileName) throws IOException {
+		Formula f = Parser.parse(CharStreams.fromStream(getClass().getResourceAsStream(fileName)));
+		ConjunctiveNormalForm cnf = f.toConjunctiveNormalForm();
+		System.out.println(cnf.getVariableCount() + " " + cnf.getClauseCount());
+	}
+}
