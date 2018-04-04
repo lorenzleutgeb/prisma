@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static it.unibz.stud_inf.ils.white.prisma.ast.ConnectiveExpression.not;
-
 public class Atom extends Expression {
 	public static final Atom TRUE = new Atom(ConstantPredicate.TRUE, Collections.emptyList());
 	public static final Atom FALSE = new Atom(ConstantPredicate.FALSE, Collections.emptyList());

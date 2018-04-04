@@ -5,6 +5,7 @@ import it.unibz.stud_inf.ils.white.prisma.Groundable;
 
 import java.util.Set;
 
+import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.FALSE;
 import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.AND;
 import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.NOT;
 import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.OR;
@@ -42,6 +43,12 @@ public abstract class Expression implements Groundable<Expression, Expression> {
 		}
 
 		ConjunctiveNormalForm cnf = new ConjunctiveNormalForm();
+
+		if (FALSE.equals(expression)) {
+			cnf.add();
+			return cnf;
+		}
+
 		Integer atom = cnf.put(expression);
 		cnf.add(atom);
 		return cnf;
@@ -58,5 +65,23 @@ public abstract class Expression implements Groundable<Expression, Expression> {
 
 	public boolean isLiteral() {
 		return false;
+	}
+
+	public static Expression and(Expression... expressions) {
+		if (expressions.length == 1) {
+			return expressions[0];
+		}
+		return new ConnectiveExpression(AND, expressions);
+	}
+
+	public static Expression or(Expression... expressions) {
+		if (expressions.length == 1) {
+			return expressions[0];
+		}
+		return new ConnectiveExpression(OR, expressions);
+	}
+
+	public static Expression not(Expression expression) {
+		return new ConnectiveExpression(NOT, expression);
 	}
 }

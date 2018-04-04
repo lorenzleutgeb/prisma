@@ -31,6 +31,13 @@ public class ConnectiveExpression extends Expression {
 	private final List<Expression> expressions;
 
 	public ConnectiveExpression(BooleanConnective connective, List<Expression> expressions) {
+		int enforcedArity = connective.getEnforcedArity();
+		if (enforcedArity != 0 && expressions.size() != enforcedArity) {
+			throw new IllegalArgumentException("Number of expressions does not match enforced arity of connective!");
+		}
+		if (enforcedArity == 0 && expressions.size() < 2) {
+			throw new IllegalArgumentException("Trying to instantiate connective with just one expression where there is no enforced arity!");
+		}
 		if (expressions.stream().anyMatch(Objects::isNull)) {
 			throw new NullPointerException();
 		}
@@ -43,18 +50,6 @@ public class ConnectiveExpression extends Expression {
 		this(connective, asList(expressions));
 	}
 
-	public static ConnectiveExpression and(Expression... expressions) {
-		return new ConnectiveExpression(AND, expressions);
-	}
-
-	public static ConnectiveExpression or(Expression... expressions) {
-		return new ConnectiveExpression(OR, expressions);
-	}
-
-	public static ConnectiveExpression not(Expression expression) {
-		return new ConnectiveExpression(NOT, expression);
-	}
-
 	public BooleanConnective getConnective() {
 		return connective;
 	}
@@ -63,7 +58,7 @@ public class ConnectiveExpression extends Expression {
 		return expressions;
 	}
 
-	public ConnectiveExpression compress() {
+	public Expression compress() {
 		List<Expression> compressed = new ArrayList<>(expressions.size());
 
 		for (Expression e : expressions) {
@@ -76,7 +71,12 @@ public class ConnectiveExpression extends Expression {
 			}
 			var ce = (ConnectiveExpression) e;
 			if (connective.equals(ce.connective)) {
-				compressed.addAll(ce.compress().expressions);
+				Expression cee = ce.compress();
+				if (cee instanceof ConnectiveExpression) {
+					compressed.addAll(((ConnectiveExpression)cee).expressions);
+				} else {
+					compressed.add(cee);
+				}
 			} else {
 				compressed.add(ce.compress());
 			}
@@ -84,7 +84,10 @@ public class ConnectiveExpression extends Expression {
 		return swap(compressed);
 	}
 
-	public ConnectiveExpression swap(List<Expression> expressions) {
+	public Expression swap(List<Expression> expressions) {
+		if (expressions.size() == 1 && !is(NOT)) {
+			return expressions.get(0);
+		}
 		return new ConnectiveExpression(connective, expressions);
 	}
 
@@ -115,7 +118,7 @@ public class ConnectiveExpression extends Expression {
 		return expressions.stream();
 	}
 
-	private ConnectiveExpression map(Function<? super Expression, ? extends Expression> f) {
+	private Expression map(Function<? super Expression, ? extends Expression> f) {
 		return swap(stream().map(f).collect(toList()));
 	}
 

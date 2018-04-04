@@ -66,7 +66,7 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 		return new Formula(singletonList(
 			expressions
 				.stream()
-				.reduce(TRUE, ConnectiveExpression::and)
+				.reduce(TRUE, Expression::and)
 		));
 	}
 
