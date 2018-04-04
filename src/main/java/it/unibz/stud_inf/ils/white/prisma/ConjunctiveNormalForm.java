@@ -99,18 +99,14 @@ public class ConjunctiveNormalForm {
 
 		out.println("p cnf " + getVariableCount() + " " + getClauseCount());
 
-		// Vec and VecInt implementations of toArray() are cheap since they
-		// only pass a reference.
-
-		Stream.of(clauses.toArray())
-			.map(c -> Stream.of(c.toArray())
-				.map(String::valueOf)
-				.collect(Collectors.joining(" "))
-			)
-			.forEach(s -> {
-				out.print(s);
-				out.println(" 0");
-			});
+		for (int i = 0; i < clauses.size(); i++) {
+			IVecInt clause = clauses.get(i);
+			for (int j = 0; j < clause.size(); j++) {
+				out.print(clause.get(j));
+				out.print(' ');
+			}
+			out.println(" 0");
+		}
 	}
 
 	public void printModelsTo(PrintStream out, long n) {
