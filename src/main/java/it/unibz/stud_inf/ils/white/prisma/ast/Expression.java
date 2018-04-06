@@ -3,9 +3,11 @@ package it.unibz.stud_inf.ils.white.prisma.ast;
 import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
 import it.unibz.stud_inf.ils.white.prisma.Groundable;
 
+import java.util.List;
 import java.util.Set;
 
 import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.FALSE;
+import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.TRUE;
 import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.AND;
 import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.NOT;
 import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.OR;
@@ -68,20 +70,39 @@ public abstract class Expression implements Groundable<Expression, Expression> {
 	}
 
 	public static Expression and(Expression... expressions) {
-		if (expressions.length == 1) {
-			return expressions[0];
-		}
-		return new ConnectiveExpression(AND, expressions);
+		return create(AND, expressions);
 	}
 
 	public static Expression or(Expression... expressions) {
-		if (expressions.length == 1) {
-			return expressions[0];
-		}
-		return new ConnectiveExpression(OR, expressions);
+		return create(OR, expressions);
 	}
 
 	public static Expression not(Expression expression) {
-		return new ConnectiveExpression(NOT, expression);
+		return create(NOT, expression);
+	}
+
+	public static Expression create(BooleanConnective connective, Expression... expressions) {
+		int enforcedArity = connective.getEnforcedArity();
+		if (enforcedArity == 0 && expressions.length == 1) {
+			return expressions[0];
+		}
+		return new ConnectiveExpression(connective, expressions);
+	}
+
+	public static Expression create(BooleanConnective connective, List<Expression> expressions) {
+		if (expressions.isEmpty()) {
+			if (AND.equals(connective)) {
+				return TRUE;
+			} else if (OR.equals(connective)){
+				return FALSE;
+			}
+			throw new IllegalArgumentException();
+		}
+
+		int enforcedArity = connective.getEnforcedArity();
+		if (enforcedArity == 0 && expressions.size() == 1) {
+			return expressions.get(0);
+		}
+		return new ConnectiveExpression(connective, expressions);
 	}
 }

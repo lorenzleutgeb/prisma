@@ -48,7 +48,7 @@ public class QuantifiedExpression<T> extends Expression {
 			substitution.remove(quantifier.getVariable());
 		}
 
-		return new ConnectiveExpression(
+		return create(
 			quantifier.getConnective(),
 			instances
 		);
