@@ -1,10 +1,11 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class ConstantTerm extends Term {
@@ -15,7 +16,7 @@ public class ConstantTerm extends Term {
 	}
 
 	@Override
-	public Term standardize(Map<Long, Long> map, IntIdGenerator generator) {
+	public Term standardize(Map<Long, Long> map, Identifier generator) {
 		return this;
 	}
 
@@ -32,5 +33,22 @@ public class ConstantTerm extends Term {
 	@Override
 	public Set<Variable> getOccurringVariables() {
 		return Collections.emptySet();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ConstantTerm that = (ConstantTerm) o;
+		return Objects.equals(raw, that.raw);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(raw);
 	}
 }

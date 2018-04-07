@@ -3,7 +3,7 @@ package it.unibz.stud_inf.ils.white.prisma.ast;
 import com.google.common.collect.Sets;
 import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
 import it.unibz.stud_inf.ils.white.prisma.Groundable;
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.ArrayList;
@@ -213,36 +213,43 @@ public class ConnectiveExpression extends Expression {
 
 	@Override
 	public Integer tseitin(ConjunctiveNormalForm cnf) {
+		if (!is(NOT) && !is(AND) && !is(OR)) {
+			throw new UnsupportedOperationException("Tseitin translation is only defined for AND, OR and NOT.");
+		}
+
 		if (is(NOT)) {
+			// NOT is easy since it delegates to the subExpression.
 			final var subExpression = expressions.get(0);
 
 			if (!(subExpression instanceof Atom)) {
 				throw new IllegalStateException("Formula must be in negation normal form.");
 			}
 
-			return -cnf.computeIfAbsent(subExpression);
+			return subExpression.tseitin(cnf) ^ 1;
 		}
 
-		if (!is(OR) && !is(AND)) {
-			throw new UnsupportedOperationException("Tseitin translation is only defined for AND and OR.");
+		Integer self = cnf.get(this);
+
+		if (self != null) {
+			return self;
 		}
 
-		List<Integer> variables = stream().map(cnf::computeIfAbsent).collect(toList());
+		self = cnf.put(this);
 
-		Integer self = cnf.put(this);
+		List<Integer> variables = stream().map(e -> e.tseitin(cnf)).collect(toList());
 
-		int factor = is(AND) ? -1 : 1;
+		int factor = is(AND) ? 1 : 0;
 
 		// These three lines depend on the implementation of ArrayList.
 		final int[] clause = new int[variables.size() + 1];
 		for (int i = 0; i < variables.size(); i++) {
-			clause[i] = variables.get(i) * factor;
+			clause[i] = variables.get(i) ^ factor;
 		}
-		clause[variables.size()] = -self * factor;
+		clause[variables.size()] = (self ^ 1) ^ factor;
 		cnf.add(clause);
 
 		for (Integer variable : variables) {
-			cnf.add(self * factor, -variable * factor);
+			cnf.add(self ^ factor, (variable ^ 1) ^ factor);
 		}
 
 		return self;
@@ -275,11 +282,11 @@ public class ConnectiveExpression extends Expression {
 					return null;
 				}
 				if (it instanceof Atom) {
-					int variable = cnf.shallowComputeIfAbsent(it);
+					int variable = cnf.computeIfAbsent(it);
 					cnfClause[i] = variable;
 				} else {
-					int variable = cnf.shallowComputeIfAbsent(((ConnectiveExpression) it).expressions.get(0));
-					cnfClause[i] = -variable;
+					int variable = cnf.computeIfAbsent(((ConnectiveExpression) it).expressions.get(0));
+					cnfClause[i] = variable ^ 1;
 				}
 			}
 			cnf.add(cnfClause);
@@ -295,9 +302,9 @@ public class ConnectiveExpression extends Expression {
 		for (Expression e : expressions) {
 			if (e.isLiteral()) {
 				if (e instanceof Atom) {
-					cnf.add(cnf.shallowComputeIfAbsent(e));
+					cnf.add(cnf.computeIfAbsent(e));
 				} else {
-					cnf.add(-cnf.shallowComputeIfAbsent(((ConnectiveExpression) e).expressions.get(0)));
+					cnf.add(cnf.computeIfAbsent(((ConnectiveExpression) e).expressions.get(0)) ^ 1);
 				}
 				continue;
 			}
@@ -313,11 +320,11 @@ public class ConnectiveExpression extends Expression {
 					}
 
 					if (it instanceof Atom) {
-						int variable = cnf.shallowComputeIfAbsent(it);
+						int variable = cnf.computeIfAbsent(it);
 						cnfClause[i] = variable;
 					} else {
-						int variable = cnf.shallowComputeIfAbsent(((ConnectiveExpression) it).expressions.get(0));
-						cnfClause[i] = -variable;
+						int variable = cnf.computeIfAbsent(((ConnectiveExpression) it).expressions.get(0));
+						cnfClause[i] = variable ^ 1;
 					}
 				}
 				cnf.add(cnfClause);
@@ -329,7 +336,7 @@ public class ConnectiveExpression extends Expression {
 	}
 
 	@Override
-	public Expression standardize(Map<Long, Long> map, IntIdGenerator generator) {
+	public Expression standardize(Map<Long, Long> map, Identifier generator) {
 		return map(t -> t.standardize(map, generator));
 	}
 
@@ -366,21 +373,14 @@ public class ConnectiveExpression extends Expression {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-
 		ConnectiveExpression that = (ConnectiveExpression) o;
-
-		if (connective != that.connective) {
-			return false;
-		}
-
-		return expressions.equals(that.expressions);
+		return connective == that.connective &&
+			Objects.equals(expressions, that.expressions);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = connective.hashCode();
-		result = 31 * result + expressions.hashCode();
-		return result;
+		return Objects.hash(connective, expressions);
 	}
 
 	@Override

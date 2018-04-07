@@ -1,7 +1,7 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.ArrayList;
@@ -55,8 +55,8 @@ public class QuantifiedExpression<T> extends Expression {
 	}
 
 	@Override
-	public QuantifiedExpression<T> standardize(Map<Long, Long> map, IntIdGenerator generator) {
-		long id = generator.getNextId();
+	public QuantifiedExpression<T> standardize(Map<Long, Long> map, Identifier generator) {
+		long id = generator.getAsInt();
 		Map<Long, Long> subMap = new HashMap<>(map);
 		subMap.put(quantifier.getVariable().toLong(), id);
 		Variable<T> variable = ((Variable<T>)((Standardizable)quantifier.getVariable()).standardize(subMap, generator));

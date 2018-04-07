@@ -2,13 +2,14 @@ package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import com.google.common.collect.Sets;
 import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,25 +53,19 @@ public class Atom extends Expression {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-
 		Atom atom = (Atom) o;
-
-		if (!predicate.equals(atom.predicate)) {
-			return false;
-		}
-		return args.equals(atom.args);
+		return Objects.equals(predicate, atom.predicate) &&
+			Objects.equals(args, atom.args);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = predicate.hashCode();
-		result = 31 * result + args.hashCode();
-		return result;
+		return Objects.hash(predicate, args);
 	}
 
 	@Override
 	public Integer tseitin(ConjunctiveNormalForm cnf) {
-		return cnf.put(this);
+		return cnf.computeIfAbsent(this);
 	}
 
 	@Override
@@ -79,7 +74,7 @@ public class Atom extends Expression {
 	}
 
 	@Override
-	public Expression standardize(Map<Long, Long> map, IntIdGenerator generator) {
+	public Expression standardize(Map<Long, Long> map, Identifier generator) {
 		List<Arg> standardized = new ArrayList<>();
 
 		for (Arg arg : args) {

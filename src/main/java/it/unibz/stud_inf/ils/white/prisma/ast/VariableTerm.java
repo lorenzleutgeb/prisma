@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.Util;
 
@@ -49,7 +49,7 @@ public class VariableTerm extends Term implements Variable<ConstantTerm> {
 	}
 
 	@Override
-	public Term standardize(Map<Long, Long> map, IntIdGenerator generator) {
+	public Term standardize(Map<Long, Long> map, Identifier generator) {
 		Long id = map.get(this.raw);
 		if (id == null) {
 			throw new RuntimeException("Free variable!");

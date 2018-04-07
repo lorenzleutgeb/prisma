@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.ArrayList;
@@ -100,7 +100,7 @@ public class ArithmeticAtom extends Atom {
 	}
 
 	@Override
-	public Expression standardize(Map<Long, Long> map, IntIdGenerator generator) {
+	public Expression standardize(Map<Long, Long> map, Identifier generator) {
 		List<Arg> standardized = new ArrayList<>();
 
 		for (Arg arg : args) {

@@ -33,7 +33,7 @@ public abstract class Expression implements Groundable<Expression, Expression> {
 			if (expression.isLiteral()) {
 				ConjunctiveNormalForm cnf = new ConjunctiveNormalForm();
 				Integer atom = cnf.put(((ConnectiveExpression)expression).getExpressions().get(0));
-				cnf.add(-atom);
+				cnf.add(atom ^ 1);
 				return cnf;
 			} else {
 				return ((ConnectiveExpression)expression).tseitinFast();

@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.Map;
@@ -14,7 +14,7 @@ public class IntBinaryConnectiveExpression extends IntExpression {
 	private final IntExpression right;
 
 	@Override
-	public IntExpression standardize(Map<Long, Long> map, IntIdGenerator generator) {
+	public IntExpression standardize(Map<Long, Long> map, Identifier generator) {
 		return new IntBinaryConnectiveExpression(
 			left.standardize(map, generator),
 			connective,

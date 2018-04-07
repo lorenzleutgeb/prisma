@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.Util;
 
@@ -54,7 +54,7 @@ public class PredicateVariable extends Predicate implements Variable<Predicate> 
 	}
 
 	@Override
-	public Predicate standardize(Map<Long, Long> map, IntIdGenerator generator) {
+	public Predicate standardize(Map<Long, Long> map, Identifier generator) {
 		Long id = map.get(this.raw);
 		if (id == null) {
 			throw new RuntimeException("Free variable!");

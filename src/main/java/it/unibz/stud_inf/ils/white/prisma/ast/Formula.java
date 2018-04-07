@@ -2,7 +2,7 @@ package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
 import it.unibz.stud_inf.ils.white.prisma.Groundable;
-import it.unibz.stud_inf.ils.white.prisma.IntIdGenerator;
+import it.unibz.stud_inf.ils.white.prisma.Identifier;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.ArrayList;
@@ -114,7 +114,7 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 
 			final ConjunctiveNormalForm fcnf = new ConjunctiveNormalForm();
 
-			final var literals = connectiveExpression.getExpressions().stream().mapToInt(fcnf::computeIfAbsent);
+			final var literals = connectiveExpression.getExpressions().stream().mapToInt(e -> e.tseitin(fcnf));
 
 			if (connectiveExpression.getConnective().equals(AND)) {
 				literals.forEach(fcnf::add);
@@ -134,7 +134,7 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 		// Ensure that "false" is false in every model.
 		Integer f = cnf.get(Atom.FALSE);
 		if (f != null) {
-			cnf.add(-f);
+			cnf.add(f ^ 1);
 		}
 
 		return cnf;
@@ -149,7 +149,7 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 	}
 
 	@Override
-	public Formula standardize(Map<Long, Long> map, IntIdGenerator generator) {
+	public Formula standardize(Map<Long, Long> map, Identifier generator) {
 		return new Formula(
 			expressions
 				.stream().map(e -> e.standardize(new HashMap<>(map), generator))
@@ -158,7 +158,7 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 	}
 
 	public Formula standardize() {
-		return standardize(new HashMap<>(), new IntIdGenerator());
+		return standardize(new HashMap<>(), new Identifier());
 	}
 
 	public ConjunctiveNormalForm toConjunctiveNormalForm() {

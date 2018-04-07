@@ -8,6 +8,7 @@ import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 import org.sat4j.tools.ModelIterator;
 
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.Spliterators;
 import java.util.function.Consumer;
@@ -18,12 +19,14 @@ class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> extends 
 	private final boolean contradiction;
 	private final Function<int[], U> translation;
 
-	ModelSpliterator(IVec<IVecInt> clauses, Function<int[], U> translation) {
+	ModelSpliterator(Set<IVecInt> clauses, Function<int[], U> translation) {
 		super(Long.MAX_VALUE, 0);
 		ISolver solver = SolverFactory.newDefault();
 		boolean contradiction = false;
 		try {
-			solver.addAllClauses(clauses);
+			for (IVecInt clause : clauses) {
+				solver.addClause(clause);
+			}
 		} catch (ContradictionException e) {
 			contradiction = true;
 		}

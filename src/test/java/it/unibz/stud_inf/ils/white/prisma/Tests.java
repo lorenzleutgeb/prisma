@@ -32,8 +32,8 @@ class Tests {
 			of("p ? q : r",    3, 2, 4),
 			of("p <- q",       2, 1, 3),
 			of("~(p -> q)",    2, 2, 1),
-			of("true & false", 1, 2, 0),
-			of("1 > 2",        1, 2, 0),
+			of("true & false", 0, 1, 0),
+			of("1 > 2",        0, 1, 0),
 
 			of("~(~(~p & ~q) & ~(~q & r))", 3 + 2, 7, 3), // Yields DNF for NNF.
 			of("~(p -> s -> (q & r))", 4, 2, 9)
@@ -92,20 +92,21 @@ class Tests {
 		System.out.println("Ground:                " + (f = f.ground()));
 
 		final ConjunctiveNormalForm cnf = f.tseitin();
-		System.out.println("CNF size:              " + cnf.getVariableCount() + " " + cnf.getClauseCount());
+		DIMACSCNF comp = cnf.compress();
+		System.out.println("CNF size:             " + comp.getVariableCount() + " " + comp.getClauseCount());
 		System.out.println("CNF follows:");
-		System.out.println(cnf);
+		System.out.println(comp);
 		System.out.println("Models follow:");
-		cnf.printModelsTo(System.out, Long.MAX_VALUE);
+		comp.printModelsTo(System.out, Long.MAX_VALUE);
 
 		if (vars >= 0) {
-			assertEquals(vars, cnf.getVariableCount(), "Number of Variables");
+			assertEquals(vars, comp.getVariableCount(), "Number of Variables");
 		}
 		if (clauses >= 0) {
-			assertEquals(clauses, cnf.getClauseCount(), "Number of Clauses");
+			assertEquals(clauses, comp.getClauseCount(), "Number of Clauses");
 		}
 		if (models >= 0) {
-			assertEquals(models, cnf.computeModels().count(), "Number of Models");
+			assertEquals(models, comp.computeModels().count(), "Number of Models");
 		}
 	}
 

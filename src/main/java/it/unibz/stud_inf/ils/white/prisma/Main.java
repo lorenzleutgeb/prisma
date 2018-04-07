@@ -60,10 +60,10 @@ public class Main {
 					ps.println(cnf);
 					break;
 				case DIMACS:
-					cnf.printDimacsTo(ps);
+					cnf.compress().printDimacsTo(ps);
 					break;
 				case SOLVE:
-					cnf.printModelsTo(ps, options.models);
+					cnf.compress().printModelsTo(ps, options.models);
 					break;
 				default:
 					bailOut("?", null);
@@ -85,11 +85,11 @@ public class Main {
 			String ln;
 			while ((ln = reader.readLine()) != null) {
 				if (ln.isEmpty()) {
-					var it = f.toConjunctiveNormalForm().computeModels().iterator();
+					var it = f.toConjunctiveNormalForm().compress().computeModels().iterator();
 
 					while (true) {
 						if (!it.hasNext()) {
-							System.out.println(ConjunctiveNormalForm.UNSAT);
+							System.out.println("UNSATISFIABLE");
 							break;
 						}
 
