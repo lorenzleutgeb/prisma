@@ -92,6 +92,11 @@ class Tests {
 		solveAndAssert(formula, vars, clauses, models);
 	}
 
+	@Test
+	void my() {
+		solveAndAssert("true & false", -1, -1, -1);
+	}
+
 	void solveAndAssert(String formula, int vars, int clauses, int models) {
 		Formula f = Parser.parse(formula);
 		System.out.println("Input:                 " + f);
@@ -141,10 +146,5 @@ class Tests {
 		Formula f = Parser.parse(CharStreams.fromStream(getClass().getResourceAsStream(fileName)));
 		ClauseAccumulator cnf = f.accumulate();
 		System.out.println(cnf.getVariableCount() + " " + cnf.getClauseCount());
-	}
-
-	@Test
-	void my() {
-		solveAndAssert("~(~(~p & ~q) & ~(~q & r))",  3 + 2, 7, 3);
 	}
 }

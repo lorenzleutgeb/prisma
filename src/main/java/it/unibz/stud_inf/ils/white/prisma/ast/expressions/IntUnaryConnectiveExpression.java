@@ -1,10 +1,10 @@
 package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
-import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 import it.unibz.stud_inf.ils.white.prisma.ast.terms.IntExpression;
 import it.unibz.stud_inf.ils.white.prisma.ast.terms.IntNumberExpression;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
 import java.util.Map;
 import java.util.Set;

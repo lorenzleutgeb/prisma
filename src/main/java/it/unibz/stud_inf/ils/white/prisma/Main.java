@@ -114,6 +114,7 @@ public class Main {
 			}
 			reader.close();
 		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
