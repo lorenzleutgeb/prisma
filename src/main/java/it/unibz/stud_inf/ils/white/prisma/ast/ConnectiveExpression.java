@@ -355,7 +355,7 @@ public class ConnectiveExpression extends Expression {
 		}
 
 		if (is(NOT)) {
-			return "~" + expressions.get(0);
+			return "¬" + expressions.get(0);
 		}
 
 		if (enforcedArity == 2) {
