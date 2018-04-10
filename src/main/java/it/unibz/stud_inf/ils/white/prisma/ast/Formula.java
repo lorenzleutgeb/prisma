@@ -1,8 +1,8 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
+import it.unibz.stud_inf.ils.white.prisma.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.Groundable;
-import it.unibz.stud_inf.ils.white.prisma.Identifier;
+import it.unibz.stud_inf.ils.white.prisma.Counter;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.ArrayList;
@@ -103,16 +103,16 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 		);
 	}
 
-	public ConjunctiveNormalForm tseitin() {
+	public ClauseAccumulator tseitin() {
 		Expression root = expressions.get(0);
 
 		// Are we already in CNF by chance?
-		ConjunctiveNormalForm cnf = Expression.tseitinFast(root);
+		ClauseAccumulator cnf = Expression.tseitinFast(root);
 
 		if (cnf == null) {
 			ConnectiveExpression connectiveExpression = (ConnectiveExpression) root;
 
-			final ConjunctiveNormalForm fcnf = new ConjunctiveNormalForm();
+			final ClauseAccumulator fcnf = new ClauseAccumulator();
 
 			final var literals = connectiveExpression.getExpressions().stream().mapToInt(e -> e.tseitin(fcnf));
 
@@ -149,7 +149,7 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 	}
 
 	@Override
-	public Formula standardize(Map<Long, Long> map, Identifier generator) {
+	public Formula standardize(Map<Long, Long> map, Counter generator) {
 		return new Formula(
 			expressions
 				.stream().map(e -> e.standardize(new HashMap<>(map), generator))
@@ -158,10 +158,10 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 	}
 
 	public Formula standardize() {
-		return standardize(new HashMap<>(), new Identifier());
+		return standardize(new HashMap<>(), new Counter());
 	}
 
-	public ConjunctiveNormalForm toConjunctiveNormalForm() {
+	public ClauseAccumulator toConjunctiveNormalForm() {
 		return normalize().standardize().pushQuantifiersDown().ground().tseitin();
 	}
 }

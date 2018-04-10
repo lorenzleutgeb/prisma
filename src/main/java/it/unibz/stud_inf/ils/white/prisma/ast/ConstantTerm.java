@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.Identifier;
+import it.unibz.stud_inf.ils.white.prisma.Counter;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.Collections;
@@ -16,7 +16,7 @@ public class ConstantTerm extends Term {
 	}
 
 	@Override
-	public Term standardize(Map<Long, Long> map, Identifier generator) {
+	public Term standardize(Map<Long, Long> map, Counter generator) {
 		return this;
 	}
 

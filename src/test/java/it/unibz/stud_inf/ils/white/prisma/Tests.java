@@ -98,7 +98,7 @@ class Tests {
 		System.out.println("Quantifiers minimized: " + (f = f.pushQuantifiersDown()));
 		System.out.println("Ground:                " + (f = f.ground()));
 
-		final ConjunctiveNormalForm cnf = f.tseitin();
+		final ClauseAccumulator cnf = f.tseitin();
 		DIMACSCNF comp = cnf.compress();
 		System.out.println("CNF size:             " + comp.getVariableCount() + " " + comp.getClauseCount());
 		System.out.println("CNF follows:");
@@ -129,7 +129,7 @@ class Tests {
 			final String in = String.join(" ^ ", Collections.nCopies(n, "p"));
 			final String out = Parser.parse(in).toConjunctiveNormalForm().toString();
 			final int ratio = out.length() / in.length();
-			assertTrue(30 < ratio && ratio < 60, "CNF does not explode in size.");
+			assertTrue(29 < ratio && ratio < 60, "CNF does not explode in size.");
 		}
 	}
 
@@ -137,7 +137,7 @@ class Tests {
 	@ValueSource(strings = {"/sudoku.bool", "/sudoku-empty.bool", "/quants-3.bool", "/quants-5.bool"})
 	void instance(String fileName) throws IOException {
 		Formula f = Parser.parse(CharStreams.fromStream(getClass().getResourceAsStream(fileName)));
-		ConjunctiveNormalForm cnf = f.toConjunctiveNormalForm();
+		ClauseAccumulator cnf = f.toConjunctiveNormalForm();
 		System.out.println(cnf.getVariableCount() + " " + cnf.getClauseCount());
 	}
 }

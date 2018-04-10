@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.Identifier;
+import it.unibz.stud_inf.ils.white.prisma.Counter;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.Map;
@@ -53,7 +53,7 @@ public class ConstantPredicate extends Predicate {
 	}
 
 	@Override
-	public Predicate standardize(Map<Long, Long> map, Identifier generator) {
+	public Predicate standardize(Map<Long, Long> map, Counter generator) {
 		return this;
 	}
 }

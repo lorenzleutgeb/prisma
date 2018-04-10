@@ -1,8 +1,8 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import com.google.common.collect.Sets;
-import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
-import it.unibz.stud_inf.ils.white.prisma.Identifier;
+import it.unibz.stud_inf.ils.white.prisma.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.Counter;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class Atom extends Expression {
 	}
 
 	@Override
-	public Integer tseitin(ConjunctiveNormalForm cnf) {
+	public Integer tseitin(ClauseAccumulator cnf) {
 		return cnf.computeIfAbsent(this);
 	}
 
@@ -74,7 +74,7 @@ public class Atom extends Expression {
 	}
 
 	@Override
-	public Expression standardize(Map<Long, Long> map, Identifier generator) {
+	public Expression standardize(Map<Long, Long> map, Counter generator) {
 		List<Arg> standardized = new ArrayList<>();
 
 		for (Arg arg : args) {

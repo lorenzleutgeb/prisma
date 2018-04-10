@@ -1,8 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma;
 
-import com.google.common.collect.HashBiMap;
 import it.unibz.stud_inf.ils.white.prisma.ast.Atom;
-import it.unibz.stud_inf.ils.white.prisma.ast.Expression;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.IVecInt;
 
@@ -18,25 +16,31 @@ import java.util.stream.StreamSupport;
 
 import static it.unibz.stud_inf.ils.white.prisma.Util.SET_COLLECTOR;
 import static java.lang.Math.abs;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singleton;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toCollection;
 
 public class DIMACSCNF {
-	public static final DIMACSCNF UNSAT = new DIMACSCNF(HashBiMap.create(0), Set.of(new IVecInt[]{new VecInt(0)}), 0);
+	public static final DIMACSCNF UNSAT = new DIMACSCNF(emptyMap(), singleton(VecInt.EMPTY), 0);
 
 	private final Map<Integer, Atom> map;
 	private final Set<IVecInt> clauses;
 	private final int nvar;
 
 	public DIMACSCNF(Map<Integer, Atom> map, Set<IVecInt> clauses, int nvar) {
-		this.map = map;
-		this.clauses = clauses;
+		this.map = unmodifiableMap(map);
+		this.clauses = unmodifiableSet(clauses);
 		this.nvar = nvar;
 	}
 
 	public Stream<SortedSet<String>> computeModels() {
 		return StreamSupport.stream(new ModelSpliterator<>(clauses, m ->
 			IntStream.of(m)
+				// Only positive literals.
 				.filter(p -> p > 0)
+				// Only literals that correspond to atoms.
 				.filter(map::containsKey)
 				.mapToObj(map::get)
 				.map(Object::toString)
@@ -86,7 +90,6 @@ public class DIMACSCNF {
 		return clauses.stream()
 			.map(clause -> {
 				StringBuilder sb = new StringBuilder("{");
-				sb.append("{");
 				for (int j = 0; j < clause.size(); j++) {
 					Integer literal = clause.get(j);
 

@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
+import it.unibz.stud_inf.ils.white.prisma.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.Groundable;
 
 import java.util.List;
@@ -25,13 +25,13 @@ public abstract class Expression implements Groundable<Expression, Expression> {
 		return this;
 	}
 
-	public abstract Integer tseitin(ConjunctiveNormalForm cnf);
+	public abstract Integer tseitin(ClauseAccumulator cnf);
 
-	public static ConjunctiveNormalForm tseitinFast(Expression expression) {
+	public static ClauseAccumulator tseitinFast(Expression expression) {
 		// Assumption: Formula is ground and in NNF.
 		if (expression instanceof ConnectiveExpression) {
 			if (expression.isLiteral()) {
-				ConjunctiveNormalForm cnf = new ConjunctiveNormalForm();
+				ClauseAccumulator cnf = new ClauseAccumulator();
 				Integer atom = cnf.put(((ConnectiveExpression)expression).getExpressions().get(0));
 				cnf.add(atom ^ 1);
 				return cnf;
@@ -44,7 +44,7 @@ public abstract class Expression implements Groundable<Expression, Expression> {
 			return null;
 		}
 
-		ConjunctiveNormalForm cnf = new ConjunctiveNormalForm();
+		ClauseAccumulator cnf = new ClauseAccumulator();
 
 		if (FALSE.equals(expression)) {
 			cnf.add();

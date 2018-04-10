@@ -1,9 +1,9 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import com.google.common.collect.Sets;
-import it.unibz.stud_inf.ils.white.prisma.ConjunctiveNormalForm;
+import it.unibz.stud_inf.ils.white.prisma.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.Groundable;
-import it.unibz.stud_inf.ils.white.prisma.Identifier;
+import it.unibz.stud_inf.ils.white.prisma.Counter;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.ArrayList;
@@ -212,7 +212,7 @@ public class ConnectiveExpression extends Expression {
 	}
 
 	@Override
-	public Integer tseitin(ConjunctiveNormalForm cnf) {
+	public Integer tseitin(ClauseAccumulator cnf) {
 		if (!is(NOT) && !is(AND) && !is(OR)) {
 			throw new UnsupportedOperationException("Tseitin translation is only defined for AND, OR and NOT.");
 		}
@@ -269,11 +269,11 @@ public class ConnectiveExpression extends Expression {
 		);
 	}
 
-	public ConjunctiveNormalForm tseitinFast() {
+	public ClauseAccumulator tseitinFast() {
 		// If this is a disjunction, continue under
 		// the assumption that this is a clause.
 		if (is(OR)) {
-			final var cnf = new ConjunctiveNormalForm();
+			final var cnf = new ClauseAccumulator();
 			int[] cnfClause = new int[expressions.size()];
 			for (int i = 0; i < expressions.size(); i++) {
 				final var it = expressions.get(i);
@@ -298,7 +298,7 @@ public class ConnectiveExpression extends Expression {
 		}
 
 		// Continue under the assumption that this is a conjunction of clauses.
-		ConjunctiveNormalForm cnf = new ConjunctiveNormalForm();
+		ClauseAccumulator cnf = new ClauseAccumulator();
 		for (Expression e : expressions) {
 			if (e.isLiteral()) {
 				if (e instanceof Atom) {
@@ -336,7 +336,7 @@ public class ConnectiveExpression extends Expression {
 	}
 
 	@Override
-	public Expression standardize(Map<Long, Long> map, Identifier generator) {
+	public Expression standardize(Map<Long, Long> map, Counter generator) {
 		return map(t -> t.standardize(map, generator));
 	}
 

@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.Identifier;
+import it.unibz.stud_inf.ils.white.prisma.Counter;
 import it.unibz.stud_inf.ils.white.prisma.Substitution;
 
 import java.util.Map;
@@ -38,7 +38,7 @@ public class IntExpressionRange extends Domain<IntNumberExpression> {
 	}
 
 	@Override
-	public Domain<IntNumberExpression> standardize(Map<Long, Long> map, Identifier generator) {
+	public Domain<IntNumberExpression> standardize(Map<Long, Long> map, Counter generator) {
 		return new IntExpressionRange(
 			min.standardize(map, generator),
 			max.standardize(map, generator)
