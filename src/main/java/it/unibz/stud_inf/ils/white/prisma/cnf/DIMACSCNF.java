@@ -1,6 +1,7 @@
-package it.unibz.stud_inf.ils.white.prisma;
+package it.unibz.stud_inf.ils.white.prisma.cnf;
 
-import it.unibz.stud_inf.ils.white.prisma.ast.Atom;
+import it.unibz.stud_inf.ils.white.prisma.util.ModelSpliterator;
+import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Atom;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.IVecInt;
 
@@ -14,7 +15,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static it.unibz.stud_inf.ils.white.prisma.Util.SET_COLLECTOR;
+import static it.unibz.stud_inf.ils.white.prisma.util.Util.SET_COLLECTOR;
 import static java.lang.Math.abs;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singleton;

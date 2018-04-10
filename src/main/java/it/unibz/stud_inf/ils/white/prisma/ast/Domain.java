@@ -1,7 +1,5 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
-
 import java.util.Set;
 import java.util.stream.Stream;
 

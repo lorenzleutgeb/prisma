@@ -1,8 +1,9 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.ClauseAccumulator;
-import it.unibz.stud_inf.ils.white.prisma.Counter;
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.ast.expressions.ConnectiveExpression;
+import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Expression;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,9 +1,7 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import com.google.common.collect.Sets;
-import it.unibz.stud_inf.ils.white.prisma.Groundable;
-import it.unibz.stud_inf.ils.white.prisma.Counter;
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
 import java.util.List;
 import java.util.Map;

@@ -1,8 +1,10 @@
-package it.unibz.stud_inf.ils.white.prisma.ast;
+package it.unibz.stud_inf.ils.white.prisma.ast.terms;
 
-import it.unibz.stud_inf.ils.white.prisma.Counter;
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
-import it.unibz.stud_inf.ils.white.prisma.Util;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.util.Util;
+import it.unibz.stud_inf.ils.white.prisma.ast.ConstantTerm;
+import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 
 import java.util.Collections;
 import java.util.Map;

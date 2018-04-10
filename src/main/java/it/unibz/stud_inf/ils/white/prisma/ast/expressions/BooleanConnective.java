@@ -1,4 +1,4 @@
-package it.unibz.stud_inf.ils.white.prisma.ast;
+package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
 public enum BooleanConnective {
 	THEN("→", 2),

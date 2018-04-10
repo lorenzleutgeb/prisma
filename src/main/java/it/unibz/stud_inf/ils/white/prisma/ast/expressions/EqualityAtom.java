@@ -1,13 +1,15 @@
-package it.unibz.stud_inf.ils.white.prisma.ast;
+package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
-import it.unibz.stud_inf.ils.white.prisma.Counter;
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.ast.ConstantTerm;
+import it.unibz.stud_inf.ils.white.prisma.ast.terms.Arg;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.unibz.stud_inf.ils.white.prisma.ast.EqualityAtom.Connective.EQ;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.EqualityAtom.Connective.EQ;
 
 public class EqualityAtom extends Atom {
 	private final Connective connective;

@@ -1,4 +1,4 @@
-package it.unibz.stud_inf.ils.white.prisma;
+package it.unibz.stud_inf.ils.white.prisma.util;
 
 import java.util.function.IntSupplier;
 import java.util.stream.IntStream;

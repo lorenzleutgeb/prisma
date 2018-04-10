@@ -1,6 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.Counter;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
 import java.util.Map;
 

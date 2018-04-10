@@ -1,4 +1,4 @@
-package it.unibz.stud_inf.ils.white.prisma;
+package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 

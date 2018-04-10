@@ -1,5 +1,6 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
+import it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective;
 import org.sat4j.core.VecInt;
 import org.sat4j.maxsat.MinCostDecorator;
 import org.sat4j.specs.ContradictionException;

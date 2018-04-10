@@ -1,26 +1,27 @@
-package it.unibz.stud_inf.ils.white.prisma.ast;
+package it.unibz.stud_inf.ils.white.prisma.ast.terms;
 
-import it.unibz.stud_inf.ils.white.prisma.Counter;
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
-import it.unibz.stud_inf.ils.white.prisma.Util;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.util.Util;
+import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public class PredicateVariable extends Predicate implements Variable<Predicate> {
+public class IntVariable extends IntExpression implements Variable<IntNumberExpression> {
 	private final long raw;
 
-	public PredicateVariable(String name) {
+	public IntVariable(String name) {
 		this.raw = Util.toLong(name.getBytes());
 	}
 
-	public PredicateVariable(long name) {
+	public IntVariable(long name) {
 		this.raw = name;
 	}
 
 	@Override
-	public Predicate ground(Substitution substitution) {
+	public IntNumberExpression ground(Substitution substitution) {
 		return substitution.eval(this);
 	}
 
@@ -31,7 +32,7 @@ public class PredicateVariable extends Predicate implements Variable<Predicate> 
 
 	@Override
 	public String toString() {
-		return "@" + raw;
+		return "#" + raw;
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class PredicateVariable extends Predicate implements Variable<Predicate> 
 			return false;
 		}
 
-		PredicateVariable that = (PredicateVariable) o;
+		IntVariable that = (IntVariable) o;
 
 		return raw == that.raw;
 	}
@@ -54,12 +55,12 @@ public class PredicateVariable extends Predicate implements Variable<Predicate> 
 	}
 
 	@Override
-	public Predicate standardize(Map<Long, Long> map, Counter generator) {
+	public IntVariable standardize(Map<Long, Long> map, Counter generator) {
 		Long id = map.get(this.raw);
 		if (id == null) {
 			throw new RuntimeException("Free variable!");
 		}
-		return new PredicateVariable(id);
+		return new IntVariable(id);
 	}
 
 	@Override

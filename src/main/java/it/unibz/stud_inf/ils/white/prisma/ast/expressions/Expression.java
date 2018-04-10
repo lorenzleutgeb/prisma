@@ -1,16 +1,17 @@
-package it.unibz.stud_inf.ils.white.prisma.ast;
+package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
-import it.unibz.stud_inf.ils.white.prisma.ClauseAccumulator;
-import it.unibz.stud_inf.ils.white.prisma.Groundable;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.ast.Groundable;
+import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 
 import java.util.List;
 import java.util.Set;
 
-import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.FALSE;
-import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.TRUE;
-import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.AND;
-import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.NOT;
-import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.OR;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.Atom.FALSE;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.Atom.TRUE;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.AND;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.NOT;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.OR;
 
 public abstract class Expression implements Groundable<Expression, Expression> {
 	public Expression normalize() {

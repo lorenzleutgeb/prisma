@@ -1,4 +1,4 @@
-package it.unibz.stud_inf.ils.white.prisma;
+package it.unibz.stud_inf.ils.white.prisma.util;
 
 import java.util.stream.Collector;
 import java.util.stream.Collectors;

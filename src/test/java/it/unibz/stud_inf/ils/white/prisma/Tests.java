@@ -1,6 +1,8 @@
 package it.unibz.stud_inf.ils.white.prisma;
 
-import it.unibz.stud_inf.ils.white.prisma.ast.Formula;
+import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Formula;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.cnf.DIMACSCNF;
 import it.unibz.stud_inf.ils.white.prisma.parser.Parser;
 import org.antlr.v4.runtime.CharStreams;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,9 @@
-package it.unibz.stud_inf.ils.white.prisma.ast;
+package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
-import it.unibz.stud_inf.ils.white.prisma.Counter;
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.ast.terms.Arg;
+import it.unibz.stud_inf.ils.white.prisma.ast.terms.IntNumberExpression;
 
 import java.util.ArrayList;
 import java.util.List;

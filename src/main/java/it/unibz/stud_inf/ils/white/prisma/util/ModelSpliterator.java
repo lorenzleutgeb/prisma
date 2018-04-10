@@ -1,4 +1,4 @@
-package it.unibz.stud_inf.ils.white.prisma;
+package it.unibz.stud_inf.ils.white.prisma.util;
 
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -14,12 +14,12 @@ import java.util.Spliterators;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> extends Spliterators.AbstractSpliterator<SortedSet<T>> {
+public class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> extends Spliterators.AbstractSpliterator<SortedSet<T>> {
 	private final ISolver iterator;
 	private final boolean contradiction;
 	private final Function<int[], U> translation;
 
-	ModelSpliterator(Set<IVecInt> clauses, Function<int[], U> translation) {
+	public ModelSpliterator(Set<IVecInt> clauses, Function<int[], U> translation) {
 		super(Long.MAX_VALUE, 0);
 		ISolver solver = SolverFactory.newDefault();
 		boolean contradiction = false;

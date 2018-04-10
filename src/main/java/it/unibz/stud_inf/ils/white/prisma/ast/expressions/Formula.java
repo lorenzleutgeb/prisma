@@ -1,9 +1,10 @@
-package it.unibz.stud_inf.ils.white.prisma.ast;
+package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
-import it.unibz.stud_inf.ils.white.prisma.ClauseAccumulator;
-import it.unibz.stud_inf.ils.white.prisma.Groundable;
-import it.unibz.stud_inf.ils.white.prisma.Counter;
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.ast.Groundable;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.TRUE;
-import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.AND;
-import static it.unibz.stud_inf.ils.white.prisma.ast.Expression.and;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.AND;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.Expression.and;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;

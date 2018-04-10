@@ -1,7 +1,4 @@
-package it.unibz.stud_inf.ils.white.prisma;
-
-import it.unibz.stud_inf.ils.white.prisma.ast.Standardizable;
-import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
+package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import java.util.Set;
 

@@ -1,7 +1,8 @@
 package it.unibz.stud_inf.ils.white.prisma;
 
 import com.beust.jcommander.JCommander;
-import it.unibz.stud_inf.ils.white.prisma.ast.Formula;
+import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Formula;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.parser.Parser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -13,7 +14,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 
 import static it.unibz.stud_inf.ils.white.prisma.Mode.REPL;
-import static it.unibz.stud_inf.ils.white.prisma.Util.SET_COLLECTOR;
+import static it.unibz.stud_inf.ils.white.prisma.util.Util.SET_COLLECTOR;
 
 public class Main {
 	private static final String BANNER =

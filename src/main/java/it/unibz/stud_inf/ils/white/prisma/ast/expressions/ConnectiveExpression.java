@@ -1,10 +1,11 @@
-package it.unibz.stud_inf.ils.white.prisma.ast;
+package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
 import com.google.common.collect.Sets;
-import it.unibz.stud_inf.ils.white.prisma.ClauseAccumulator;
-import it.unibz.stud_inf.ils.white.prisma.Groundable;
-import it.unibz.stud_inf.ils.white.prisma.Counter;
-import it.unibz.stud_inf.ils.white.prisma.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.ast.Groundable;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +15,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.FALSE;
-import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.TRUE;
-import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.AND;
-import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.ITE;
-import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.NOT;
-import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.OR;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.Atom.FALSE;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.Atom.TRUE;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.AND;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.ITE;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.NOT;
+import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.OR;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableList;
