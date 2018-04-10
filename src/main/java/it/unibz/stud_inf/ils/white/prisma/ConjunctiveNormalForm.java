@@ -1,10 +1,8 @@
 package it.unibz.stud_inf.ils.white.prisma;
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import it.unibz.stud_inf.ils.white.prisma.ast.Atom;
 import it.unibz.stud_inf.ils.white.prisma.ast.Expression;
-import javafx.beans.binding.IntegerExpression;
 import org.sat4j.core.Vec;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.constraints.MixedDataStructureDanielWL;
@@ -22,29 +20,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static java.lang.Math.abs;
 import static org.sat4j.core.LiteralsUtils.toDimacs;
 
 public class ConjunctiveNormalForm {
-	private final BiMap<Expression, Integer> map;
+	private final Map<Expression, Integer> map;
 	private final IVec<IVecInt> clauses;
 
 	private final Identifier atoms;
 	private final Identifier gates;
 
 	public ConjunctiveNormalForm() {
-		this(HashBiMap.create(), new Vec<>(), 0, 0);
+		this(new HashMap<>(), new Vec<>(), 0, 0);
 	}
 
-	private ConjunctiveNormalForm(BiMap<Expression, Integer> map, IVec<IVecInt> clauses, int atomInitial, int gateInitial) {
+	private ConjunctiveNormalForm(Map<Expression, Integer> map, IVec<IVecInt> clauses, int atomInitial, int gateInitial) {
 		this.map = map;
 		this.clauses = clauses;
 		this.atoms = new Identifier(atomInitial, +2);
 		this.gates = new Identifier(gateInitial, -2);
-	}
-
-	private Expression get(Integer variable) {
-		return map.inverse().get(variable);
 	}
 
 	public Integer get(Expression expression) {
@@ -215,7 +208,7 @@ public class ConjunctiveNormalForm {
 				compressed.add(clause);
 			}
 
-			Expression value = map.inverse().get(variable);
+			Expression value = e.getKey();
 			if (!(value instanceof Atom)) {
 				continue;
 			}
@@ -245,7 +238,7 @@ public class ConjunctiveNormalForm {
 				}
 
 				if (internal > 0) {
-					sb.append(get(literal & ~1));
+					sb.append(literal & ~1);
 				} else {
 					sb.append("*");
 					sb.append(toDimacs(internal));
