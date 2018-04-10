@@ -21,11 +21,18 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 class Tests {
 	static Stream<? extends Arguments> groundInstances() {
 		return Stream.of(
+			of("~(q | p)",     2, 2, 1),
+			of("~(q & p)",     2, 1, 3),
+			of("~~(q | p)",    2, 1, 3),
+			of("~~q",          1, 1, 1),
 			of("~q",           1, 1, 1),
 			of("p | q",        2, 1, 3),
 			of("p & q",        2, 2, 1),
 			of("p ^ q",        2, 2, 2),
-			of("p & ~p",       1, 2, 0),
+			of("(p | q) ^ (r | s)", -1, -1, 6),
+			of("(p & q) ^ (r & s)", -1, -1, 6),
+			of("(p -> q) -> r",     -1, -1, 5),
+			of("p & ~p",       0, 1, 0),
 			of("~~~~q",        1, 1, 1),
 			of("p -> q",       2, 1, 3),
 			of("p <-> q",      2, 2, 2),
