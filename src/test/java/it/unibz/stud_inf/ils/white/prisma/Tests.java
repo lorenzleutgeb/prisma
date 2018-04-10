@@ -127,7 +127,7 @@ class Tests {
 	void parseExplosion() {
 		for (int n = 3; n < 11; n++) {
 			final String in = String.join(" ^ ", Collections.nCopies(n, "p"));
-			final String out = Parser.parse(in).toConjunctiveNormalForm().toString();
+			final String out = Parser.parse(in).accumulate().toString();
 			final int ratio = out.length() / in.length();
 			assertTrue(29 < ratio && ratio < 60, "CNF does not explode in size.");
 		}
@@ -137,7 +137,12 @@ class Tests {
 	@ValueSource(strings = {"/sudoku.bool", "/sudoku-empty.bool", "/quants-3.bool", "/quants-5.bool"})
 	void instance(String fileName) throws IOException {
 		Formula f = Parser.parse(CharStreams.fromStream(getClass().getResourceAsStream(fileName)));
-		ClauseAccumulator cnf = f.toConjunctiveNormalForm();
+		ClauseAccumulator cnf = f.accumulate();
 		System.out.println(cnf.getVariableCount() + " " + cnf.getClauseCount());
+	}
+
+	@Test
+	void my() {
+		solveAndAssert("~(~(~p & ~q) & ~(~q & r))",  3 + 2, 7, 3);
 	}
 }

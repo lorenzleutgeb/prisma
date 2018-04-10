@@ -58,6 +58,7 @@ public class ConnectiveExpression extends Expression {
 		return expressions;
 	}
 
+	@Override
 	public Expression compress() {
 		List<Expression> compressed = new ArrayList<>(expressions.size());
 

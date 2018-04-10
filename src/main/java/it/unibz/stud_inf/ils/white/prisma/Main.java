@@ -52,7 +52,7 @@ public class Main {
 		}
 
 		Formula formula = Parser.parse(inputStream);
-		ClauseAccumulator cnf = formula.toConjunctiveNormalForm();
+		ClauseAccumulator cnf = formula.accumulate();
 
 		try (PrintStream ps = new PrintStream(options.positionals.isEmpty() ? System.out : new FileOutputStream(options.positionals.get(0)))) {
 			switch (options.mode) {
@@ -85,7 +85,7 @@ public class Main {
 			String ln;
 			while ((ln = reader.readLine()) != null) {
 				if (ln.isEmpty()) {
-					var it = f.toConjunctiveNormalForm().compress().computeModels().iterator();
+					var it = f.accumulate().compress().computeModels().iterator();
 
 					while (true) {
 						if (!it.hasNext()) {

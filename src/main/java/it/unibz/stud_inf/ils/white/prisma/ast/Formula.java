@@ -14,6 +14,7 @@ import java.util.Set;
 
 import static it.unibz.stud_inf.ils.white.prisma.ast.Atom.TRUE;
 import static it.unibz.stud_inf.ils.white.prisma.ast.BooleanConnective.AND;
+import static it.unibz.stud_inf.ils.white.prisma.ast.Expression.and;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -51,41 +52,13 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 	}
 
 	public Formula toSingleExpression() {
-		if (expressions.isEmpty()) {
-			return new Formula(singletonList(TRUE));
-		}
-
-		List<Expression> expressions = standardize().expressions;
-
-		if (expressions.size() == 1) {
-			return new Formula(
-				singletonList(expressions.get(0))
-			);
-		}
-
-		return new Formula(singletonList(
-			expressions
-				.stream()
-				.reduce(TRUE, Expression::and)
-		));
+		return new Formula(singletonList(and(standardize().expressions)));
 	}
 
 	public Formula ground(Substitution substitution) {
-		if (this.expressions.isEmpty()) {
-			return new Formula(singletonList(TRUE));
-		}
-
-		List<Expression> expressions = standardize().expressions;
-
-		if (expressions.size() == 1) {
-			return new Formula(
-				singletonList(expressions.get(0).ground(substitution))
-			);
-		}
-
-		return new Formula(singletonList(new ConnectiveExpression(
-			AND,
-			expressions.stream().map(e -> e.ground(substitution)).collect(toList())
+		return new Formula(singletonList(and(
+			standardize().expressions.stream()
+				.map(e -> e.ground(substitution)).collect(toList())
 		).compress()));
 	}
 
@@ -107,37 +80,24 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 		Expression root = expressions.get(0);
 
 		// Are we already in CNF by chance?
-		ClauseAccumulator cnf = Expression.tseitinFast(root);
-
-		if (cnf == null) {
-			ConnectiveExpression connectiveExpression = (ConnectiveExpression) root;
-
-			final ClauseAccumulator fcnf = new ClauseAccumulator();
-
-			final var literals = connectiveExpression.getExpressions().stream().mapToInt(e -> e.tseitin(fcnf));
-
-			if (connectiveExpression.getConnective().equals(AND)) {
-				literals.forEach(fcnf::add);
-			} else {
-				fcnf.add(literals.toArray());
-			}
-
-			cnf = fcnf;
+		ClauseAccumulator acc = Expression.tseitinFast(root);
+		if (acc != null) {
+			return acc;
 		}
 
-		// Ensure that "true" is true in every model.
-		Integer t = cnf.get(Atom.TRUE);
-		if (t != null) {
-			cnf.add(t);
+		ConnectiveExpression connectiveExpression = (ConnectiveExpression) root;
+
+		final ClauseAccumulator facc = new ClauseAccumulator();
+
+		final var literals = connectiveExpression.getExpressions().stream().mapToInt(e -> e.tseitin(facc));
+
+		if (connectiveExpression.getConnective().equals(AND)) {
+			literals.forEach(facc::add);
+		} else {
+			facc.add(literals.toArray());
 		}
 
-		// Ensure that "false" is false in every model.
-		Integer f = cnf.get(Atom.FALSE);
-		if (f != null) {
-			cnf.add(f ^ 1);
-		}
-
-		return cnf;
+		return facc;
 	}
 
 	public Formula pushQuantifiersDown() {
@@ -161,7 +121,11 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 		return standardize(new HashMap<>(), new Counter());
 	}
 
-	public ClauseAccumulator toConjunctiveNormalForm() {
-		return normalize().standardize().pushQuantifiersDown().ground().tseitin();
+	public ClauseAccumulator accumulate() {
+		return normalize()
+			.standardize()
+			.pushQuantifiersDown()
+			.ground()
+			.tseitin();
 	}
 }

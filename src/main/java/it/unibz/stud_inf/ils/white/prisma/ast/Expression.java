@@ -69,7 +69,15 @@ public abstract class Expression implements Groundable<Expression, Expression> {
 		return false;
 	}
 
+	public Expression compress() {
+		return this;
+	}
+
 	public static Expression and(Expression... expressions) {
+		return create(AND, expressions);
+	}
+
+	public static Expression and(List<Expression> expressions) {
 		return create(AND, expressions);
 	}
 
