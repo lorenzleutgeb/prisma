@@ -1,9 +1,9 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
-import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 import it.unibz.stud_inf.ils.white.prisma.ast.expressions.ConnectiveExpression;
 import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Expression;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +60,7 @@ public class QuantifiedExpression<T> extends Expression {
 		long id = generator.getAsInt();
 		Map<Long, Long> subMap = new HashMap<>(map);
 		subMap.put(quantifier.getVariable().toLong(), id);
+		// TODO: Go down the rabbit hole of removing this unchecked cast...
 		Variable<T> variable = ((Variable<T>)((Standardizable)quantifier.getVariable()).standardize(subMap, generator));
 		return new QuantifiedExpression<>(
 			quantifier.switchBoth(

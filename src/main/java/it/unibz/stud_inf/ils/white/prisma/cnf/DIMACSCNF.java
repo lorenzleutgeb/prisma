@@ -1,7 +1,7 @@
 package it.unibz.stud_inf.ils.white.prisma.cnf;
 
-import it.unibz.stud_inf.ils.white.prisma.util.ModelSpliterator;
 import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Atom;
+import it.unibz.stud_inf.ils.white.prisma.util.ModelSpliterator;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.IVecInt;
 

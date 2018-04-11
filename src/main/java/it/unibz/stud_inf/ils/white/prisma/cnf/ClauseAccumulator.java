@@ -1,9 +1,9 @@
 package it.unibz.stud_inf.ils.white.prisma.cnf;
 
-import it.unibz.stud_inf.ils.white.prisma.util.Counter;
-import it.unibz.stud_inf.ils.white.prisma.util.PlainUnitPropagationListener;
 import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Atom;
 import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Expression;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.util.PlainUnitPropagationListener;
 import org.sat4j.core.Vec;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.constraints.MixedDataStructureDanielWL;

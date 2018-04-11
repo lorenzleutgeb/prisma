@@ -1,9 +1,9 @@
 package it.unibz.stud_inf.ils.white.prisma.ast.terms;
 
-import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
-import it.unibz.stud_inf.ils.white.prisma.util.Util;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import it.unibz.stud_inf.ils.white.prisma.util.Util;
 
 import java.util.Collections;
 import java.util.Map;

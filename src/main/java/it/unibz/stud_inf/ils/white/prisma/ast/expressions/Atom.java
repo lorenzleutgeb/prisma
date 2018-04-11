@@ -1,11 +1,11 @@
 package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
 import com.google.common.collect.Sets;
-import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
-import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 import it.unibz.stud_inf.ils.white.prisma.ast.terms.Arg;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,8 +56,7 @@ public class Atom extends Expression {
 			return false;
 		}
 		Atom atom = (Atom) o;
-		return Objects.equals(predicate, atom.predicate) &&
-			Objects.equals(args, atom.args);
+		return Objects.equals(predicate, atom.predicate) && Objects.equals(args, atom.args);
 	}
 
 	@Override

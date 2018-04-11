@@ -1,11 +1,11 @@
 package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
 import com.google.common.collect.Sets;
-import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.ast.Groundable;
-import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
+import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,8 @@ import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnecti
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.equals;
+import static java.util.Objects.hash;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -194,8 +196,7 @@ public class ConnectiveExpression extends Expression {
 
 	@Override
 	public Expression ground(Substitution substitution) {
-		Stream<Expression> groundExpressions = stream()
-			.map(e -> e.ground(substitution));
+		Stream<Expression> groundExpressions = stream().map(e -> e.ground(substitution));
 
 		if (is(AND) || is(OR)) {
 			groundExpressions = groundExpressions.filter(e -> {
@@ -376,13 +377,12 @@ public class ConnectiveExpression extends Expression {
 			return false;
 		}
 		ConnectiveExpression that = (ConnectiveExpression) o;
-		return connective == that.connective &&
-			Objects.equals(expressions, that.expressions);
+		return connective == that.connective && Objects.equals(expressions, that.expressions);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(connective, expressions);
+		return hash(connective, expressions);
 	}
 
 	@Override

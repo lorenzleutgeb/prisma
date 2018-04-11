@@ -1,8 +1,8 @@
 package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
-import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.ast.Groundable;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
+import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 
 import java.util.List;
 import java.util.Set;
@@ -102,7 +102,7 @@ public abstract class Expression implements Groundable<Expression, Expression> {
 		if (expressions.isEmpty()) {
 			if (AND.equals(connective)) {
 				return TRUE;
-			} else if (OR.equals(connective)){
+			} else if (OR.equals(connective)) {
 				return FALSE;
 			}
 			throw new IllegalArgumentException();
