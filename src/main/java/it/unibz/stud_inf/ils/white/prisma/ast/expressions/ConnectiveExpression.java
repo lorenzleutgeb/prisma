@@ -6,6 +6,7 @@ import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.util.Counter;
+import org.sat4j.core.VecInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,10 @@ import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnecti
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableList;
-import static java.util.Objects.equals;
 import static java.util.Objects.hash;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.sat4j.core.LiteralsUtils.neg;
 
 public class ConnectiveExpression extends Expression {
 	private final BooleanConnective connective;
@@ -216,19 +217,19 @@ public class ConnectiveExpression extends Expression {
 
 	@Override
 	public Integer tseitin(ClauseAccumulator cnf) {
-		if (!is(NOT) && !is(AND) && !is(OR)) {
-			throw new UnsupportedOperationException("Tseitin translation is only defined for AND, OR and NOT.");
-		}
+		//if (!is(NOT) && !is(AND) && !is(OR)) {
+		//	throw new UnsupportedOperationException("Tseitin translation is only defined for AND, OR and NOT.");
+		//}
 
 		if (is(NOT)) {
 			// NOT is easy since it delegates to the subExpression.
 			final var subExpression = expressions.get(0);
 
-			if (!(subExpression instanceof Atom)) {
-				throw new IllegalStateException("Formula must be in negation normal form.");
-			}
+			//if (!(subExpression instanceof Atom)) {
+			//	throw new IllegalStateException("Formula must be in negation normal form.");
+			//}
 
-			return subExpression.tseitin(cnf) ^ 1;
+			return neg(subExpression.tseitin(cnf));
 		}
 
 		Integer self = cnf.get(this);
@@ -239,20 +240,25 @@ public class ConnectiveExpression extends Expression {
 
 		self = cnf.put(this);
 
-		List<Integer> variables = stream().map(e -> e.tseitin(cnf)).collect(toList());
+		List<Integer> literals = stream().map(e -> e.tseitin(cnf)).collect(toList());
 
-		int factor = is(AND) ? 1 : 0;
+		// We'll generate an implication downward.
+		final int notSelf = neg(self);
 
 		// These three lines depend on the implementation of ArrayList.
-		final int[] clause = new int[variables.size() + 1];
-		for (int i = 0; i < variables.size(); i++) {
-			clause[i] = variables.get(i) ^ factor;
+		if (is(OR)) {
+			final var clause = new VecInt(literals.size() + 1);
+			clause.push(notSelf);
+			for (Integer l : literals) {
+				clause.unsafePush(l);
+			}
+			cnf.add(clause);
 		}
-		clause[variables.size()] = (self ^ 1) ^ factor;
-		cnf.add(clause);
 
-		for (Integer variable : variables) {
-			cnf.add(self ^ factor, (variable ^ 1) ^ factor);
+		if (is(AND)) {
+			for (Integer l : literals) {
+				cnf.add(notSelf, l);
+			}
 		}
 
 		return self;

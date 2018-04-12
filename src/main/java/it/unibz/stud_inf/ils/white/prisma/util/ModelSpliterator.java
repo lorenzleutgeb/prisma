@@ -7,6 +7,7 @@ import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 import org.sat4j.tools.ModelIterator;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Spliterators;
@@ -17,6 +18,7 @@ public class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> e
 	private final ISolver iterator;
 	private final boolean contradiction;
 	private final Function<int[], U> translation;
+	private final HashSet<U> memory;
 
 	public ModelSpliterator(Set<IVecInt> clauses, Function<int[], U> translation) {
 		super(Long.MAX_VALUE, 0);
@@ -32,6 +34,7 @@ public class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> e
 		this.contradiction = contradiction;
 		this.translation = translation;
 		this.iterator = new ModelIterator(solver);
+		this.memory = new HashSet<>();
 	}
 
 	@Override
@@ -42,7 +45,11 @@ public class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> e
 
 		try {
 			if (iterator.isSatisfiable()) {
-				action.accept(translation.apply(iterator.model()));
+				U translation = this.translation.apply(iterator.model());
+				if (!memory.contains(translation)) {
+					memory.add(translation);
+					action.accept(translation);
+				}
 				return true;
 			}
 			return false;

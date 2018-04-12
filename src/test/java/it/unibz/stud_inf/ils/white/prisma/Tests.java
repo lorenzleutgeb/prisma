@@ -44,7 +44,7 @@ class Tests {
 			of("true & false", 0, 1, 0),
 			of("1 > 2",        0, 1, 0),
 
-			of("~(~(~p & ~q) & ~(~q & r))", 3 + 2, 7, 3), // Yields DNF for NNF.
+			of("~(~(~p & ~q) & ~(~q & r))", 3 + 2, 5, 3), // Yields DNF for NNF.
 			of("~(p -> s -> (q & r))", 4, 2, 9)
 		);
 	}
