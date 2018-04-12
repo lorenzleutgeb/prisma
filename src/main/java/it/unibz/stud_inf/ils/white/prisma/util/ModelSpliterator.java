@@ -1,6 +1,15 @@
 package it.unibz.stud_inf.ils.white.prisma.util;
 
-import org.sat4j.minisat.SolverFactory;
+import org.sat4j.minisat.constraints.MixedDataStructureDanielWL;
+import org.sat4j.minisat.core.DataStructureFactory;
+import org.sat4j.minisat.core.IOrder;
+import org.sat4j.minisat.core.Solver;
+import org.sat4j.minisat.learning.MiniSATLearning;
+import org.sat4j.minisat.orders.RSATPhaseSelectionStrategy;
+import org.sat4j.minisat.orders.SubsetVarOrder;
+import org.sat4j.minisat.orders.VarOrderHeap;
+import org.sat4j.minisat.restarts.Glucose21Restarts;
+import org.sat4j.minisat.restarts.MiniSATRestarts;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.IVecInt;
@@ -20,9 +29,27 @@ public class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> e
 	private final Function<int[], U> translation;
 	private final HashSet<U> memory;
 
-	public ModelSpliterator(Set<IVecInt> clauses, Function<int[], U> translation) {
+	public ModelSpliterator(Set<IVecInt> clauses, Set<Integer> guessable, Function<int[], U> translation) {
 		super(Long.MAX_VALUE, 0);
-		ISolver solver = SolverFactory.newDefault();
+
+		final int[] guessableArray = new int[guessable.size()];
+		int i = 0;
+		for (Integer l : guessable) {
+			guessableArray[i++] = l;
+		}
+
+		IOrder order = new SubsetVarOrder(guessableArray);
+		//IOrder order = new RestrictedOrder(new VarOrderHeap(new RSATPhaseSelectionStrategy()), guessable);
+
+		// Expansion of SolverFactory.newDefault()
+		// in order to allow for configuration.
+		DataStructureFactory dsf = new MixedDataStructureDanielWL();
+		MiniSATLearning<DataStructureFactory> learning = new MiniSATLearning<>();
+		Solver<DataStructureFactory> solver = new Solver<>(learning, dsf, order, new Glucose21Restarts());
+		solver.setSimplifier(solver.EXPENSIVE_SIMPLIFICATION);
+		solver.setLearnedConstraintsDeletionStrategy(solver.glucose);
+		solver.setDBSimplificationAllowed(true);
+
 		boolean contradiction = false;
 		try {
 			for (IVecInt clause : clauses) {
@@ -49,6 +76,8 @@ public class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> e
 				if (!memory.contains(translation)) {
 					memory.add(translation);
 					action.accept(translation);
+				} else {
+					System.out.println("FILTERING");
 				}
 				return true;
 			}

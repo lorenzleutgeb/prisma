@@ -37,7 +37,7 @@ public class DIMACSCNF {
 	}
 
 	public Stream<SortedSet<String>> computeModels() {
-		return StreamSupport.stream(new ModelSpliterator<>(clauses, m ->
+		return StreamSupport.stream(new ModelSpliterator<>(clauses, map.keySet(), m ->
 			IntStream.of(m)
 				// Only positive literals.
 				.filter(p -> p > 0)
