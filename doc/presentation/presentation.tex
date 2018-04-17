@@ -1,0 +1,99 @@
+\documentclass[smaller,dvipsnames]{beamer}
+
+\usetheme[numbering=fraction,%
+          block=fill,%
+          sectionpage=progressbar,%
+          subsectionpage=progressbar,%
+  ]{metropolis} % Use metropolis theme
+\setbeamercovered{invisible}
+
+\usepackage[utf8]{inputenc}
+%\usepackage[dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{tikz}
+  \usetikzlibrary{arrows} % required in the preamble
+\usepackage{listings}
+
+\title{SAT Solvers Front-end}
+\subtitle{Team White Report}
+\author{Filippo~De~Bortoli \and Aneta~Koleva \and Lorenz~Leutgeb}
+\institute{Universit\'a degli Studi di Bolzano\\[2mm] \texttt{\{\href{mailto:filippo.debortoli@stud-inf.unibz.it}{filippo.debortoli},\href{mailto:aneta.koleva@stud-inf.unibz.it}{aneta.koleva},\href{mailto:lorenz.leutgeb@stud-inf.unibz.it}{lorenz.leutgeb}\}\newline @stud-inf.unibz.it}}  
+\date{April 20, 2018}
+
+\begin{document}
+
+  \maketitle
+
+  \begin{frame}{Outline}
+    \tableofcontents
+  \end{frame}
+
+  \section{Introduction}
+
+  \begin{frame}
+    \frametitle{The task}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Tools of the trade}
+  \end{frame}
+
+  \section{Front-end architecture}
+
+  \begin{frame}
+    \frametitle{The "big picture"}
+    % Panorama on the whole front-end.
+    % Here, names only. Descriptions in next slides.
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Parser}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{ClauseAccumulator}
+  \end{frame}
+
+  % Add one slide per each relevant class.
+
+  \section{Algorithms and Design Choices}
+
+  \begin{frame}
+    \frametitle{Optimized CNF}
+    % Describe employed optimizations. May need several slides.
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Unit propagation}
+    % Describe how unit propagation is done. Join with optimized CNF?
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Other}
+    % As well, one/more slides for each relevant piece of machinery.
+  \end{frame}
+
+  \section{Evaluation}
+
+  \begin{frame}
+    \frametitle{The test suite}
+    % Describing the kind of formula tested against the front-end.
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Some results}
+    % Showing improvement over time?
+    % wrt generated clauses and literals.
+  \end{frame}
+
+  \section{Conclusion}
+
+  % Here, a recap. Right?
+
+  \begin{frame}[standout]
+    Thank you!
+  \end{frame}
+
+\end{document}
