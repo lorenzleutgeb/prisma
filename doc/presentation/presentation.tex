@@ -15,6 +15,7 @@
 \usepackage{tikz}
   \usetikzlibrary{arrows} % required in the preamble
 \usepackage{listings}
+\usepackage{todonotes}
 
 \title{SAT Solvers Front-end}
 \subtitle{Team White Report}
@@ -79,11 +80,25 @@
 
   \begin{frame}
     \frametitle{The test suite}
-    % Describing the kind of formula tested against the front-end.
+    Suite available as a \alert{jUnit} instance.
+
+    Test types:
+    \begin{itemize}
+      \item 22 propositional formulas \textcolor{lightgray}{connectives, known equivalences}
+      \item 24 non-ground formulas \textcolor{lightgray}{integers with related built-ins, characters}
+      \item 4 complex encodings \textcolor{lightgray}{Sudoku, nested quantifiers optimization}
+    \end{itemize}
+    Collected data:
+    \begin{itemize}
+      \item \alert{Size} of generated CNF \textcolor{lightgray}{\# clauses and \# variables}
+      \item Execution \alert{time}
+      % TODO: @lorenz do we also collect #models?
+    \end{itemize}
   \end{frame}
 
   \begin{frame}
-    \frametitle{Some results}
+    \frametitle{Results}
+    \missingfigure[]{Plot of the collected data (not produced yet).}
     % Showing improvement over time?
     % wrt generated clauses and literals.
   \end{frame}
