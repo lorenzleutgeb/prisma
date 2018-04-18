@@ -105,6 +105,8 @@ public class Main {
 					}
 				} else if (ln.toLowerCase().equals("clear")) {
 					f = new Formula();
+				} else if (ln.toLowerCase().equals("exit")) {
+					System.exit(0);
 				} else {
 					f.add(Parser.parse(ln));
 					System.out.println(f.toSingleExpression());
