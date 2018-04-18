@@ -40,6 +40,15 @@ public class Main {
 		}
 
 		if (REPL.equals(options.mode)) {
+			if (options.positionals.size() > 0) {
+				System.out.println("NOTICE: Input file is ignored in REPL mode.");
+			}
+			if (options.positionals.size() > 1) {
+				System.out.println("NOTICE: Output file is ignored in REPL mode.");
+			}
+			if (options.models != 1) {
+				System.out.println("NOTICE: '-models' option is ignored in REPL mode.");
+			}
 			repl();
 			return;
 		}
@@ -79,7 +88,7 @@ public class Main {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
 		// Maybe print the grammar here.
-		System.out.println(" \"<expression>\"  to  conjoin it with previous ones\n             \"\"  to  search computeModels\n        \"clear\"  to  start over\n         \"exit\"  to  exit");
+		System.out.println(" \"<expression>\"  to  conjoin it with previous ones\n             \"\"  to  compute models\n        \"clear\"  to  start over\n         \"exit\"  to  exit");
 
 		try {
 			System.out.print("> ");
