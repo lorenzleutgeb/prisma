@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -74,7 +75,7 @@ public class DIMACSCNF {
 				out.print(clause.get(j));
 				out.print(' ');
 			}
-			out.println(" 0");
+			out.println("0");
 		}
 	}
 
@@ -90,7 +91,7 @@ public class DIMACSCNF {
 	public String toString() {
 		return clauses.stream()
 			.map(clause -> {
-				StringBuilder sb = new StringBuilder("{");
+				StringBuilder sb = new StringBuilder("(");
 				for (int j = 0; j < clause.size(); j++) {
 					Integer literal = clause.get(j);
 
@@ -107,11 +108,11 @@ public class DIMACSCNF {
 					}
 
 					if (j != clause.size() - 1) {
-						sb.append(", ");
+						sb.append(" ∨ ");
 					}
 				}
-				return sb.append("}");
+				return sb.append(")");
 			})
-			.collect(SET_COLLECTOR);
+			.collect(Collectors.joining("\n∧\t", "(\t", "\n) // Team White"));
 	}
 }
