@@ -17,11 +17,11 @@
 \usepackage{listings}
 \usepackage{todonotes}
 
-\title{SAT Solvers Front-end}
+\title{SAT Solver Front-End}
 \subtitle{Team White Report}
 \author{Filippo~De~Bortoli \and Aneta~Koleva \and Lorenz~Leutgeb}
-\institute{Universit\'a degli Studi di Bolzano\\[2mm] \texttt{\{\href{mailto:filippo.debortoli@stud-inf.unibz.it}{filippo.debortoli},\href{mailto:aneta.koleva@stud-inf.unibz.it}{aneta.koleva},\href{mailto:lorenz.leutgeb@stud-inf.unibz.it}{lorenz.leutgeb}\}\newline @stud-inf.unibz.it}}  
-\date{April 20, 2018}
+\institute{Free University of Bozen-Bolzano\\[2mm] \texttt{\{\href{mailto:filippo.debortoli@stud-inf.unibz.it}{filippo.debortoli},\href{mailto:aneta.koleva@stud-inf.unibz.it}{aneta.koleva},\href{mailto:lorenz.leutgeb@stud-inf.unibz.it}{lorenz.leutgeb}\}\newline @stud-inf.unibz.it}}
+\date{2018-04-20}
 
 \begin{document}
 
@@ -33,28 +33,76 @@
 
   \section{Introduction}
 
-  \begin{frame}
-    \frametitle{The task}
+  \begin{frame}{Task}
+	\begin{enumerate}
+		\item Given a grammar for a Boolean logic language with standard connectives and quantifiers over finite domains.
+		\item Develop an optimizing compiler that translates input formulae into CNF.
+		\item Interface with a SAT solver to compute models for input formulae.
+	\end{enumerate}
   \end{frame}
 
-  \begin{frame}
-    \frametitle{Tools of the trade}
+  \begin{frame}{Tools of the Trade}
+	\begin{enumerate}
+		\item Pragmatic choices to avoid any confusions
+		\item Keeping it DRY
+		\item Avoid reinvention
+	\end{enumerate}
+
+  	\begin{center}
+  	\begin{tabular}{lll}
+  		{\bfseries Tool/Library} & {\bfseries Version} & {\bfseries Purpose} \\
+  		ANTLR & 4.7.1 & Parser Generator \\
+  		Java & 10 & Runtime \\
+  		SAT4J & 2.3.5 & Solver Components \\
+  		Guava & & Utilities and Data Structures \\
+  		JCommander & & Commandline Parsing \\
+  		JUnit & 5.1 & Testing \\
+  		LOG4J & & Logging \\
+  		Gradle & 4.6 & Dependency and Build Management \\
+  	\end{tabular}
+  	\end{center}
   \end{frame}
 
   \section{Front-end architecture}
 
-  \begin{frame}
-    \frametitle{The "big picture"}
+  \begin{frame}{Big Picture}
     % Panorama on the whole front-end.
     % Here, names only. Descriptions in next slides.
+    \begin{enumerate}
+    	\item Parser
+    	\item Compilation Passes
+    	\begin{itemize}
+    		\item Normalization to $\land, \lor, \neg$
+    		\item Negation Normal Form (De Morgan)
+    		\item Standardizing Apart
+    		\item Push and Reorder Quantifiers
+    		\item Grounding
+    	\end{itemize}
+    	\item Tseitin Transformation
+    	\item Unit Propagation
+    	\item Hole Elimination
+    	\item DIMACS Generation
+    \end{enumerate}
   \end{frame}
 
-  \begin{frame}
-    \frametitle{Parser}
+  \begin{frame}{Parser}
+  	\begin{enumerate}
+  		\item We don't always need to parse languages\dots \newline But when we do, we use a parser generator (like ANTLR).
+  		\item Straightforward parser generation as build step with Gradle: \texttt{gradle~generateGrammarSource}
+  		\item At runtime use ANTLR API and consume parse tree.
+  		\item Map parse tree into our custom AST representation which implements compilation passes.
+  	\end{enumerate}
   \end{frame}
 
-  \begin{frame}
-    \frametitle{ClauseAccumulator}
+  \begin{frame}{ClauseAccumulator}
+  	\begin{itemize}
+	  	\item Bookkeeping during Tseitin Transformation
+  		\item Which proposition maps to which high expression?
+  		\item Reserve new propositions
+	  	\item Store clauses
+	  	\item Pass on clauses to a 2WL container (borrowed from SAT4J)
+	  	\item Once transformation is done, compress using Unit Propagation and Hole Elimination
+  	\end{itemize}
   \end{frame}
 
   % Add one slide per each relevant class.
@@ -80,7 +128,7 @@
 
   \begin{frame}
     \frametitle{The test suite}
-    Suite available as a \alert{jUnit} instance.
+    Suite available as a \alert{JUnit} instance.
 
     Test types:
     \begin{itemize}
