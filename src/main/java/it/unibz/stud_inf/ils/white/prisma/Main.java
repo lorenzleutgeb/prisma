@@ -58,7 +58,7 @@ public class Main {
 		try (PrintStream ps = new PrintStream(options.positionals.isEmpty() ? System.out : new FileOutputStream(options.positionals.get(0)))) {
 			switch (options.mode) {
 				case CNF:
-					ps.println(cnf);
+					ps.println(cnf.compress());
 					break;
 				case DIMACS:
 					cnf.compress().printDimacsTo(ps);
