@@ -139,11 +139,9 @@
       \item If any variable from original input is removed by propagation, it is added  again by means of a unit clause.
       \item Re-use components of SAT4J (2WL, partial Assignment, \texttt{UnitPropagationListener})
       \item \alert{Hole Elimination} for a sparse DIMACS encoding
-       \end{itemize}
-        
     \end{itemize}
   \end{frame}
-  
+
   \begin{frame}[fragile]{Extensions}
     Extend syntax and semantics of expressions to accomodate
     \begin{itemize}
@@ -199,6 +197,15 @@ expression
   		\item Use a faster runtime than Java (go native)
   		\item Generate CNF and propagate in parallel.
    		\item Further optimization that we have missed.
+  	\end{itemize}
+  \end{frame}
+
+  \begin{frame}{Conclusion}
+  	\begin{itemize}  	
+  		\item Working Implementation
+  		\item Some challenges along the way, but nothing impossible.
+  		\item Deliberately not optimized for execution speed, we're still happy.
+  		\item Some thought went into the optimizing passes (also trial and error).
   	\end{itemize}
   \end{frame}
 
