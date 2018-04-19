@@ -1,4 +1,4 @@
-\documentclass[smaller,dvipsnames]{beamer}
+\documentclass[smaller,dvipsnames,ratio=169]{beamer}
 
 \usetheme[numbering=fraction,%
           block=fill,%
@@ -68,21 +68,21 @@
   \begin{frame}{Big Picture}
     % Panorama on the whole front-end.
     % Here, names only. Descriptions in next slides.
-    \begin{enumerate}
-    	\item Parser
-    	\item Compilation Passes
-    	\begin{itemize}
-    		\item Normalization to $\land, \lor, \neg$
-    		\item Negation Normal Form (De Morgan)
-    		\item Standardizing Apart
-    		\item Push and Reorder Quantifiers
-    		\item Grounding
-    	\end{itemize}
-    	\item Tseitin Transformation
-    	\item Unit Propagation
-    	\item Hole Elimination
-    	\item DIMACS Generation
-    \end{enumerate}
+    
+    \begin{tabular}{lll}
+1 & Parser & $(\exists x \in \{a, b\}) \neg (\exists y \in \{c, d\}) (p(x) \land p(y))$ \\
+2 &Compilation Passes & \\
+2a & ~ Normalization & (to only have $\land, \lor, \neg$)\\
+2b & ~ NNF &$ (\exists x {\in} \{a, b\}) (\forall y {\in} \{c, d\}) (\neg p(x) \lor \neg p(y))$ \\
+2b & ~ Standarization &$ (\exists x_1 {\in} \{a, b\}) (\forall x_2 {\in} \{c, d\}) (\neg p(x_1) \lor \neg p(x_2))$ \\
+2c & ~ Push and Reorder Qs&$ (\forall x_2 {\in} \{c, d\}) (\exists x_1 {\in} \{a, b\}) (\neg p(x_1) \lor \neg p(x_2))$ \\
+3 & Ground &$ (\neg p(a) \lor \neg p(c) \lor \neg p(b)) \land \dots$ \\
+4 & Tseitin Transformation \\
+5 & CNF Minimization \\
+5a & ~ Unit Propagation \\
+5b & ~ Hole Elimination & (in case unit propagation is successful)\\
+6 & DIMACS Generation \\
+    \end{tabular}
   \end{frame}
 
   % Add one slide per each relevant class.
