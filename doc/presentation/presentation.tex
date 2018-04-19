@@ -18,10 +18,10 @@
 \usepackage{todonotes}
 
 \title{SAT Solver Front-End}
-\subtitle{Team White Report}
+\subtitle{Team White}
 \author{Filippo~De~Bortoli \and Aneta~Koleva \and Lorenz~Leutgeb}
 \institute{Free University of Bozen-Bolzano\\[2mm] \texttt{\{\href{mailto:filippo.debortoli@stud-inf.unibz.it}{filippo.debortoli},\href{mailto:aneta.koleva@stud-inf.unibz.it}{aneta.koleva},\href{mailto:lorenz.leutgeb@stud-inf.unibz.it}{lorenz.leutgeb}\}\newline @stud-inf.unibz.it}}
-\date{2018-04-20}
+\date{20-04-2018}
 
 \begin{document}
 
@@ -101,35 +101,35 @@
   \begin{frame}{Clause Accumulator}
     \begin{itemize}
       \item \alert{Bookkeeping} during Tseitin Transformation
-      \item dynamic clause storage
+      \item Dynamic clause storage
       \item Which proposition maps to which high level expression?
       \item Pass on clauses to a 2WL container (borrowed from SAT4J)
-      \item \alert{Compress} transformed CNF formula using Unit Propagation and Hole Elimination
+      \item \alert{Minimize} size of transformed CNF formula using Unit Propagation and Hole Elimination.
     \end{itemize}
   \end{frame}
   
   \begin{frame}
     \frametitle{Quantifier Push and Ordering}
     \begin{itemize}
-      \item Quantifiers are pushed \alert{inwards} \textcolor{lightgray}{to contain size of grounded formula}
+      \item Quantifiers are pushed \alert{inwards} \textcolor{gray}{to contain size of grounded formula}.
       \item Consecutive quantifiers can be reordered if:
       \begin{itemize}
         \item unrelated variables
         \item \alert{non-dependent} domains 
         \item leftmost quantifier is existential
       \end{itemize}
-      \item Quantifiers of same type not reordered \textcolor{lightgray}{irrelevant for output size}
-      \item Reordering aims at \alert{minimization} of size of grounded formula
+      \item Quantifiers of same type not reordered (irrelevant for output size).
+      \item Reordering aims at \alert{minimization} of size of grounded formula.
     \end{itemize}
   \end{frame}
 
-  \begin{frame}{CNF conversion}
+  \begin{frame}{CNF Conversion}
     \begin{itemize}
       \item Receiving a ground formula in NNF 
       \item \alert{Tseitin transformation} is applied\ldots
-      \item \ldots{}using only \alert{implications} \textcolor{lightgray}{NNF ensures positive context}
+      \item \ldots{}using only \alert{implications} \textcolor{gray}{NNF ensures positive context}
       % \item Use implications only (we always are in a positive context thanks to NNF).
-      \item Structural \alert{sharing} employed \textcolor{lightgray}{avoiding repeated conversions} % hashing expressions and doing memoization
+      \item Structural \alert{sharing} employed \textcolor{gray}{avoiding repeated conversions} % hashing expressions and doing memoization
     \end{itemize}
   \end{frame}
 
@@ -138,8 +138,12 @@
       \item Aims at removing as many Tseitin-generated products as possible
       \item If any variable from original input is removed by propagation, adds it again as unit clause
       \item Re-use components of SAT4J (2WL, partial Assignment, \texttt{UnitPropagationListener})
+      \item If UP is successful
+       \begin{itemize}
+       	\item  \alert{Hole Elimination} is applied \textcolor{gray}{variable remapping to save memory}
+       \end{itemize}
+        
     \end{itemize}
-    If UP is successful, \alert{Hole Elimination} is applied \textcolor{lightgray}{variable remapping to save memory}
   \end{frame}
   
   \begin{frame}[fragile]{Extensions}
@@ -172,13 +176,13 @@ expression
 
     Instance types:
     \begin{itemize}
-      \item 22 propositional formulas \textcolor{lightgray}{connectives, known equivalences}
-      \item 24 non-ground formulas \textcolor{lightgray}{integers with related built-ins, characters}
-      \item 4 complex encodings \textcolor{lightgray}{Sudoku, nested quantifiers optimization}
+      \item 22 propositional formulas \textcolor{gray}{connectives, known equivalences}
+      \item 24 non-ground formulas \textcolor{gray}{integers with related built-ins, characters}
+      \item 4 complex encodings \textcolor{gray}{Sudoku, nested quantifiers optimization}
     \end{itemize}
     Asserted results:
     \begin{itemize}
-      \item \alert{Size} of generated CNF \textcolor{lightgray}{\# clauses and \# variables}
+      \item \alert{Size} of generated CNF \textcolor{gray}{\# clauses and \# variables}
       \item Number of \alert{models}
     \end{itemize}
     Execution \alert{time} is measured.
@@ -188,15 +192,15 @@ expression
 
   \begin{frame}{Possible Improvements}
   	\begin{itemize}
-  		\item Combine multiple optimization passes into one (currently separated for clarity).
-  		\item Further optimization that we have missed.
-  		\item Initialize solver to use pre-filled 2WL datastrcture.
-  		\item String Terms (access length, define concatenation).
+  		\item Merging compiling passes (currently separated for clarity)
+  		\item Pass over pre-filled 2WL data structure to solver.
+  		\item String as terms (access length, define concatenation)
   		\item Other solvers as back-ends.
   		\item Syntax Highlighting in REPL.
-  		\item Rewrite the whole thing.
-  		\item Use a faster runtime than Java (go native).
+  		\item Refactoring or reimplementing from scratch.
+  		\item Use a faster runtime than Java (go native)
   		\item Generate CNF and propagate in parallel.
+   		\item Further optimization that we have missed.
   	\end{itemize}
   \end{frame}
 
