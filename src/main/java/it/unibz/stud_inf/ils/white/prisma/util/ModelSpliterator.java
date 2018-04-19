@@ -76,8 +76,6 @@ public class ModelSpliterator<T extends Comparable<T>, U extends SortedSet<T>> e
 				if (!memory.contains(translation)) {
 					memory.add(translation);
 					action.accept(translation);
-				} else {
-					System.out.println("FILTERING");
 				}
 				return true;
 			}
