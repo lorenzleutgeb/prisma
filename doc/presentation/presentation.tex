@@ -8,7 +8,7 @@
 \setbeamercovered{invisible}
 
 \usepackage[utf8]{inputenc}
-%\usepackage[dvipsnames]{xcolor}
+\usepackage{xcolor}
 \usepackage{xspace}
 \usepackage{booktabs}
 \usepackage{amssymb}
@@ -101,7 +101,7 @@
   \begin{frame}{Clause Accumulator}
     \begin{itemize}
       \item \alert{Bookkeeping} during Tseitin Transformation
-      \item Store clauses
+      \item dynamic clause storage
       \item Which proposition maps to which high level expression?
       \item Pass on clauses to a 2WL container (borrowed from SAT4J)
       \item \alert{Compress} transformed CNF formula using Unit Propagation and Hole Elimination
@@ -110,7 +110,7 @@
   
   \begin{frame}
     \frametitle{Quantifier Push and Ordering}
-    \begin{enumerate}
+    \begin{itemize}
       \item Quantifiers are pushed \alert{inwards} \textcolor{lightgray}{to contain size of grounded formula}
       \item Consecutive quantifiers can be reordered if:
       \begin{itemize}
@@ -120,15 +120,17 @@
       \end{itemize}
       \item Quantifiers of same type not reordered \textcolor{lightgray}{irrelevant for output size}
       \item Reordering aims at \alert{minimization} of size of grounded formula
-    \end{enumerate}
+    \end{itemize}
   \end{frame}
 
-  \begin{frame}{Optimized CNF}
+  \begin{frame}{CNF conversion}
     \begin{itemize}
-      \item Use implications only (we always are in a positive context thanks to NNF).
-  		\item Structural Sharing
-  	\end{itemize}
-    % Describe employed optimizations. May need several slides.
+      \item Receiving a ground formula in NNF 
+      \item \alert{Tseitin transformation} is applied\ldots
+      \item \ldots{}using only \alert{implications} \textcolor{lightgray}{NNF ensures positive context}
+      % \item Use implications only (we always are in a positive context thanks to NNF).
+      \item Structural \alert{sharing} employed \textcolor{lightgray}{avoiding repeated conversions} % hashing expressions and doing memoization
+    \end{itemize}
   \end{frame}
 
   \begin{frame}{Unit Propagation}
@@ -139,17 +141,14 @@
     \end{itemize}
     If UP is successful, \alert{Hole Elimination} is applied \textcolor{lightgray}{variable remapping to save memory}
   \end{frame}
-
-  \begin{frame}{Hole Elimination}
-
-  \end{frame}
   
   \begin{frame}[fragile]{Extensions}
-  	\begin{itemize}
-  		\item Term (In)equality
-  		\item Comparison of Integer Expressions
-  	\end{itemize}
-  	\begin{verbatim}
+    Extend syntax and semantics of expressions to accomodate
+    \begin{itemize}
+      \item Term (in)\alert{equality}
+      \item \alert{Comparison} of integer expressions
+    \end{itemize}
+    \begin{verbatim}
 expression
 : ...
 
@@ -162,7 +161,7 @@ expression
 # equalityAtom
 
 ;
-  	\end{verbatim}
+    \end{verbatim}
 \end{frame}
 
   \section{Evaluation}
@@ -185,12 +184,7 @@ expression
     Execution \alert{time} is measured.
   \end{frame}
 
-  \begin{frame}
-    \frametitle{Results}
-    \missingfigure[]{Plot of the collected data (not produced yet).}
-    % Showing improvement over time?
-    % wrt generated clauses and literals.
-  \end{frame}
+  \section{Conclusion}
 
   \begin{frame}{Possible Improvements}
   	\begin{itemize}
@@ -205,10 +199,6 @@ expression
   		\item Generate CNF and propagate in parallel.
   	\end{itemize}
   \end{frame}
-
-  \section{Conclusion}
-
-  % Here, a recap. Right?
 
   \begin{frame}[standout]
     Thank you!
