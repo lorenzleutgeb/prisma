@@ -44,7 +44,7 @@
   \begin{frame}{Tools of the Trade}
 	\begin{enumerate}
 		\item Pragmatic choices to avoid any confusions
-		\item Keeping it DRY
+		\item Keeping it DRY (Don't Repeat Yourself)
 		\item Avoid reinvention
 	\end{enumerate}
 
@@ -94,12 +94,11 @@
   	\end{enumerate}
   \end{frame}
 
-  \begin{frame}{ClauseAccumulator}
+  \begin{frame}{Clause Accumulator}
   	\begin{itemize}
 	  	\item Bookkeeping during Tseitin Transformation
-  		\item Which proposition maps to which high expression?
-  		\item Reserve new propositions
 	  	\item Store clauses
+  		\item Which proposition maps to which high level expression?
 	  	\item Pass on clauses to a 2WL container (borrowed from SAT4J)
 	  	\item Once transformation is done, compress using Unit Propagation and Hole Elimination
   	\end{itemize}
@@ -109,18 +108,23 @@
 
   \section{Algorithms and Design Choices}
 
-  \begin{frame}
-    \frametitle{Optimized CNF}
+  \begin{frame}{Optimized CNF}
+  	\begin{itemize}
+  		\item Use implications only (we always are in a positive context thanks to NNF).
+  		\item Structural Sharing
+  	\end{itemize}
     % Describe employed optimizations. May need several slides.
   \end{frame}
 
-  \begin{frame}
-    \frametitle{Unit propagation}
+  \begin{frame}{Unit Propagation}
+  	\begin{itemize}
+  		\item Re-use components of SAT4J (2WL, partial Assignment, \texttt{UnitPropagationListener})
+  		\item Add unit clauses for propositions that correspond to atoms in the high level formula in case they were eliminated by UP.
+  	\end{itemize}
     % Describe how unit propagation is done. Join with optimized CNF?
   \end{frame}
 
-  \begin{frame}
-    \frametitle{Other}
+  \begin{frame}{Other}
     % As well, one/more slides for each relevant piece of machinery.
   \end{frame}
 
