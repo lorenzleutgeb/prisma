@@ -127,6 +127,27 @@
   \begin{frame}{Other}
     % As well, one/more slides for each relevant piece of machinery.
   \end{frame}
+  
+  \begin{frame}[fragile]{Extensions}
+  	\begin{itemize}
+  		\item Term (In)equality
+  		\item Comparison of Integer Expressions
+  	\end{itemize}
+  	\begin{verbatim}
+expression
+: ...
+
+| left=intExpression
+    op=(GT|LT|GE|LE|NE|EQ)
+  right=intExpression
+# arithmeticAtom
+
+| left=term op=(NE|EQ) right=term
+# equalityAtom
+
+;
+  	\end{verbatim}
+\end{frame}
 
   \section{Evaluation}
 
