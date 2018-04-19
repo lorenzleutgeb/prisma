@@ -80,7 +80,7 @@
 4 & Tseitin Transformation \\
 5 & CNF Minimization \\
 5a & ~ Unit Propagation \\
-5b & ~ Hole Elimination & (in case unit propagation is successful)\\
+5b & ~ Hole Elimination \\
 6 & DIMACS Generation \\
     \end{tabular}
   \end{frame}
@@ -101,7 +101,7 @@
   \begin{frame}{Clause Accumulator}
     \begin{itemize}
       \item \alert{Bookkeeping} during Tseitin Transformation
-      \item Dynamic clause storage
+      \item Clause storage
       \item Which proposition maps to which high level expression?
       \item Pass on clauses to a 2WL container (borrowed from SAT4J)
       \item \alert{Minimize} size of transformed CNF formula using Unit Propagation and Hole Elimination.
@@ -109,38 +109,36 @@
   \end{frame}
   
   \begin{frame}
-    \frametitle{Quantifier Push and Ordering}
+    \frametitle{Pushing and Reordering Quantifiers}
     \begin{itemize}
       \item Quantifiers are pushed \alert{inwards} \textcolor{gray}{to contain size of grounded formula}.
-      \item Consecutive quantifiers can be reordered if:
+      \item Consecutive quantifiers should be reordered if:
       \begin{itemize}
-        \item unrelated variables
-        \item \alert{non-dependent} domains 
-        \item leftmost quantifier is existential
+        \item variables are \alert{unrelated}
+        \item domains are \alert{independent}
+        \item outer quantifier is existential, inner is universal
       \end{itemize}
-      \item Quantifiers of same type not reordered (irrelevant for output size).
+      \item Quantifiers of same type are not reordered (irrelevant for output size).
       \item Reordering aims at \alert{minimization} of size of grounded formula.
     \end{itemize}
   \end{frame}
 
   \begin{frame}{CNF Conversion}
     \begin{itemize}
-      \item Receiving a ground formula in NNF 
-      \item \alert{Tseitin transformation} is applied\ldots
-      \item \ldots{}using only \alert{implications} \textcolor{gray}{NNF ensures positive context}
+      \item Receives a ground formula in NNF
+      \item \alert{Tseitin Transformation} is applied\ldots
+      \item \ldots{}using only \alert{implications} since NNF ensures positive context
       % \item Use implications only (we always are in a positive context thanks to NNF).
-      \item Structural \alert{sharing} employed \textcolor{gray}{avoiding repeated conversions} % hashing expressions and doing memoization
+      \item Structural \alert{Sharing} to avoid repeated conversions % hashing expressions and doing memoization
     \end{itemize}
   \end{frame}
 
   \begin{frame}{Unit Propagation}
     \begin{itemize}
-      \item Aims at removing as many Tseitin-generated products as possible
-      \item If any variable from original input is removed by propagation, adds it again as unit clause
+      \item To remove Tseitin-generated propositions
+      \item If any variable from original input is removed by propagation, it is added  again by means of a unit clause.
       \item Re-use components of SAT4J (2WL, partial Assignment, \texttt{UnitPropagationListener})
-      \item If UP is successful
-       \begin{itemize}
-       	\item  \alert{Hole Elimination} is applied \textcolor{gray}{variable remapping to save memory}
+      \item \alert{Hole Elimination} for a sparse DIMACS encoding
        \end{itemize}
         
     \end{itemize}
