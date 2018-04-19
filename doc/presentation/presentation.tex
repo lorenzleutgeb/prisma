@@ -74,7 +74,7 @@
 2 &Compilation Passes & \\
 2a & ~ Normalization & (to only have $\land, \lor, \neg$)\\
 2b & ~ NNF &$ (\exists x {\in} \{a, b\}) (\forall y {\in} \{c, d\}) (\neg p(x) \lor \neg p(y))$ \\
-2b & ~ Standarization &$ (\exists x_1 {\in} \{a, b\}) (\forall x_2 {\in} \{c, d\}) (\neg p(x_1) \lor \neg p(x_2))$ \\
+2b & ~ Standardization &$ (\exists x_1 {\in} \{a, b\}) (\forall x_2 {\in} \{c, d\}) (\neg p(x_1) \lor \neg p(x_2))$ \\
 2c & ~ Push and Reorder Qs&$ (\forall x_2 {\in} \{c, d\}) (\exists x_1 {\in} \{a, b\}) (\neg p(x_1) \lor \neg p(x_2))$ \\
 3 & Ground &$ (\neg p(a) \lor \neg p(c) \lor \neg p(b)) \land \dots$ \\
 4 & Tseitin Transformation \\
@@ -100,11 +100,11 @@
 
   \begin{frame}{Clause Accumulator}
     \begin{itemize}
-      \item Bookkeeping during Tseitin Transformation
+      \item \alert{Bookkeeping} during Tseitin Transformation
       \item Store clauses
       \item Which proposition maps to which high level expression?
       \item Pass on clauses to a 2WL container (borrowed from SAT4J)
-      \item Once transformation is done, compress using Unit Propagation and Hole Elimination
+      \item \alert{Compress} transformed CNF formula using Unit Propagation and Hole Elimination
     \end{itemize}
   \end{frame}
   
@@ -133,14 +133,15 @@
 
   \begin{frame}{Unit Propagation}
     \begin{itemize}
+      \item Aims at removing as many Tseitin-generated products as possible
+      \item If any variable from original input is removed by propagation, adds it again as unit clause
       \item Re-use components of SAT4J (2WL, partial Assignment, \texttt{UnitPropagationListener})
-      \item Remove as many Tseitin-generated variables as possible
-      \item Preserve propagated variables from the input by adding them as unit clauses
     \end{itemize}
+    If UP is successful, \alert{Hole Elimination} is applied \textcolor{lightgray}{variable remapping to save memory}
   \end{frame}
 
-  \begin{frame}{Other}
-    % As well, one/more slides for each relevant piece of machinery.
+  \begin{frame}{Hole Elimination}
+
   \end{frame}
 
   \section{Evaluation}
