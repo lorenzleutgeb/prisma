@@ -1,6 +1,7 @@
 package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
 import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
+import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 import it.unibz.stud_inf.ils.white.prisma.ast.terms.Arg;
 import it.unibz.stud_inf.ils.white.prisma.ast.terms.IntNumberExpression;
 import it.unibz.stud_inf.ils.white.prisma.util.Counter;
@@ -102,7 +103,7 @@ public class ArithmeticAtom extends Atom {
 	}
 
 	@Override
-	public Expression standardize(Map<Long, Long> map, Counter generator) {
+	public Expression standardize(Map<Variable, Variable> map, Counter generator) {
 		List<Arg> standardized = new ArrayList<>();
 
 		for (Arg arg : args) {

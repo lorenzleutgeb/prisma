@@ -351,7 +351,7 @@ public class ConnectiveExpression extends Expression {
 	}
 
 	@Override
-	public Expression standardize(Map<Long, Long> map, Counter generator) {
+	public Expression standardize(Map<Variable, Variable> map, Counter generator) {
 		return map(t -> t.standardize(map, generator));
 	}
 

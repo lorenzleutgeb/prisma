@@ -9,6 +9,7 @@ import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -75,7 +76,7 @@ public class Atom extends Expression {
 	}
 
 	@Override
-	public Expression standardize(Map<Long, Long> map, Counter generator) {
+	public Expression standardize(Map<Variable, Variable> map, Counter generator) {
 		List<Arg> standardized = new ArrayList<>();
 
 		for (Arg arg : args) {
@@ -99,7 +100,9 @@ public class Atom extends Expression {
 
 	@Override
 	public Set<Set<Variable>> getRelatedVariables() {
-		return Set.of(getOccurringVariables());
+		Set<Set<Variable>> result = new HashSet<>(1);
+		result.add(getOccurringVariables());
+		return result;
 	}
 
 	@Override

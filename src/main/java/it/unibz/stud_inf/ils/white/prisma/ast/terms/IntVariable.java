@@ -7,16 +7,13 @@ import it.unibz.stud_inf.ils.white.prisma.util.Util;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class IntVariable extends IntExpression implements Variable<IntNumberExpression> {
-	private final long raw;
+	private final String raw;
 
 	public IntVariable(String name) {
-		this.raw = Util.toLong(name.getBytes());
-	}
-
-	public IntVariable(long name) {
 		this.raw = name;
 	}
 
@@ -43,28 +40,17 @@ public class IntVariable extends IntExpression implements Variable<IntNumberExpr
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-
 		IntVariable that = (IntVariable) o;
-
-		return raw == that.raw;
+		return Objects.equals(raw, that.raw);
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (raw ^ (raw >>> 32));
+		return Objects.hash(raw);
 	}
 
 	@Override
-	public IntVariable standardize(Map<Long, Long> map, Counter generator) {
-		Long id = map.get(this.raw);
-		if (id == null) {
-			throw new RuntimeException("Free variable!");
-		}
-		return new IntVariable(id);
-	}
-
-	@Override
-	public long toLong() {
-		return raw;
+	public IntVariable standardize(Map<Variable, Variable> map, Counter generator) {
+		return (IntVariable) map.get(this);
 	}
 }

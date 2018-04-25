@@ -40,7 +40,7 @@ public class IntExpressionRange extends Domain<IntNumberExpression> {
 	}
 
 	@Override
-	public Domain<IntNumberExpression> standardize(Map<Long, Long> map, Counter generator) {
+	public Domain<IntNumberExpression> standardize(Map<Variable, Variable> map, Counter generator) {
 		return new IntExpressionRange(
 			min.standardize(map, generator),
 			max.standardize(map, generator)

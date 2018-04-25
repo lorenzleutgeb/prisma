@@ -4,20 +4,16 @@ import it.unibz.stud_inf.ils.white.prisma.ast.ConstantTerm;
 import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 import it.unibz.stud_inf.ils.white.prisma.util.Counter;
-import it.unibz.stud_inf.ils.white.prisma.util.Util;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class VariableTerm extends Term implements Variable<ConstantTerm> {
-	private final long raw;
+	private final String raw;
 
 	public VariableTerm(String name) {
-		this.raw = Util.toLong(name.getBytes());
-	}
-
-	public VariableTerm(long name) {
 		this.raw = name;
 	}
 
@@ -39,29 +35,18 @@ public class VariableTerm extends Term implements Variable<ConstantTerm> {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-
 		VariableTerm that = (VariableTerm) o;
-
-		return raw == that.raw;
+		return Objects.equals(raw, that.raw);
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (raw ^ (raw >>> 32));
+		return Objects.hash(raw);
 	}
 
 	@Override
-	public Term standardize(Map<Long, Long> map, Counter generator) {
-		Long id = map.get(this.raw);
-		if (id == null) {
-			throw new RuntimeException("Free variable!");
-		}
-		return new VariableTerm(id);
-	}
-
-	@Override
-	public long toLong() {
-		return raw;
+	public Term standardize(Map<Variable, Variable> map, Counter generator) {
+		return (VariableTerm) map.get(this);
 	}
 
 	@Override

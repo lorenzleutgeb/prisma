@@ -16,7 +16,7 @@ public class ConstantTerm extends Term {
 	}
 
 	@Override
-	public Term standardize(Map<Long, Long> map, Counter generator) {
+	public Term standardize(Map<Variable, Variable> map, Counter generator) {
 		return this;
 	}
 

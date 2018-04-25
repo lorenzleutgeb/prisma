@@ -2,6 +2,9 @@ package it.unibz.stud_inf.ils.white.prisma.ast;
 
 import it.unibz.stud_inf.ils.white.prisma.ast.expressions.ConnectiveExpression;
 import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Expression;
+import it.unibz.stud_inf.ils.white.prisma.ast.expressions.PredicateVariable;
+import it.unibz.stud_inf.ils.white.prisma.ast.terms.IntVariable;
+import it.unibz.stud_inf.ils.white.prisma.ast.terms.VariableTerm;
 import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
@@ -56,12 +59,25 @@ public class QuantifiedExpression<T> extends Expression {
 	}
 
 	@Override
-	public QuantifiedExpression<T> standardize(Map<Long, Long> map, Counter generator) {
+	public QuantifiedExpression<T> standardize(Map<Variable, Variable> map, Counter generator) {
 		long id = generator.getAsInt();
-		Map<Long, Long> subMap = new HashMap<>(map);
-		subMap.put(quantifier.getVariable().toLong(), id);
+		Map<Variable, Variable> subMap = new HashMap<>(map);
+		Variable<T> var = quantifier.getVariable();
+		Variable stdVar;
+
+		if (var instanceof IntVariable) {
+			stdVar = new IntVariable("x" + id);
+		} else if (var instanceof VariableTerm) {
+			stdVar = new VariableTerm("x" + id);
+		} else if (var instanceof PredicateVariable) {
+			stdVar = new PredicateVariable("x" + id);
+		} else {
+			throw new RuntimeException();
+		}
+
+		subMap.put(var, stdVar);
 		// TODO: Go down the rabbit hole of removing this unchecked cast...
-		Variable<T> variable = ((Variable<T>)((Standardizable)quantifier.getVariable()).standardize(subMap, generator));
+		Variable<T> variable = ((Variable<T>)((Standardizable) var).standardize(subMap, generator));
 		return new QuantifiedExpression<>(
 			quantifier.switchBoth(
 				variable,

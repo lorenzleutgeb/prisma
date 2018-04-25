@@ -116,7 +116,7 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 	}
 
 	@Override
-	public Formula standardize(Map<Long, Long> map, Counter generator) {
+	public Formula standardize(Map<Variable, Variable> map, Counter generator) {
 		return new Formula(
 			expressions
 				.stream().map(e -> e.standardize(new HashMap<>(map), generator))
