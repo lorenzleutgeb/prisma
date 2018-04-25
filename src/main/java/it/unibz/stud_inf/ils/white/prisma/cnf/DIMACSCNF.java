@@ -99,7 +99,7 @@ public class DIMACSCNF {
 						sb.append("-");
 					}
 
-					var expression = map.get(abs(literal));
+					Atom expression = map.get(abs(literal));
 					if (expression != null) {
 						sb.append(expression);
 					} else {

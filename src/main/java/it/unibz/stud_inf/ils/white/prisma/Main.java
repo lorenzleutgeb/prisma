@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.Stack;
 
 import static it.unibz.stud_inf.ils.white.prisma.Mode.REPL;
@@ -113,7 +115,7 @@ public class Main {
 				save = false;
 				try {
 					if (ln.isEmpty()) {
-						var it = f.accumulate().compress().computeModels().iterator();
+						Iterator<SortedSet<String>> it = f.accumulate().compress().computeModels().iterator();
 
 						while (true) {
 							if (!it.hasNext()) {

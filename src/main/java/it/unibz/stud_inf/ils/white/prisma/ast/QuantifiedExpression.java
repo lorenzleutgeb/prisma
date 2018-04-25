@@ -84,7 +84,7 @@ public class QuantifiedExpression<T> extends Expression {
 				return switchScope(scope.pushQuantifiersDown());
 			}
 
-			final var scope = (QuantifiedExpression) this.scope;
+			final QuantifiedExpression scope = (QuantifiedExpression) this.scope;
 
 			if (quantifier.isExististential() && scope.quantifier.isExististential()) {
 				return switchScope(scope.pushQuantifiersDown());

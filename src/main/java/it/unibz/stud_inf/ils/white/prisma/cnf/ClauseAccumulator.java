@@ -8,6 +8,7 @@ import org.sat4j.core.Vec;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.constraints.MixedDataStructureDanielWL;
 import org.sat4j.minisat.constraints.cnf.Lits;
+import org.sat4j.minisat.core.Propagatable;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IVec;
 import org.sat4j.specs.IVecInt;
@@ -114,8 +115,8 @@ public class ClauseAccumulator {
 		}
 
 		for (int j = 0; j < propagated.size(); j++) {
-			final var literal = propagated.get(j);
-			final var watches = dsf.getVocabulary().watches(literal);
+			final int literal = propagated.get(j);
+			final IVec<Propagatable> watches = dsf.getVocabulary().watches(literal);
 			final int size = watches.size();
 			for (int i = 0; i < size; i++) {
 				if (!watches.get(i).propagate(upl, literal)) {
@@ -124,7 +125,7 @@ public class ClauseAccumulator {
 			}
 		}
 
-		var denseId = new Counter();
+		Counter denseId = new Counter();
 		Map<Integer, Integer> denseMap = new HashMap<>(map.size());
 		Set<IVecInt> compressed = new HashSet<>(clauses.size());
 
@@ -166,13 +167,13 @@ public class ClauseAccumulator {
 			int p = denseMap.computeIfAbsent(literal & ~1, k -> denseId.getAsInt());
 
 			if (!getLits().isUnassigned(literal)) {
-				var clause = new VecInt(new int[] {
+				VecInt clause = new VecInt(new int[] {
 					(getLits().isFalsified(literal) ? -1 : 1) * p
 				});
 				compressed.add(clause);
 			}
 
-			final var expression = e.getKey();
+			final Expression expression = e.getKey();
 			if (expression instanceof Atom) {
 				packed.put(p, (Atom) expression);
 			}

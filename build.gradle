@@ -21,8 +21,8 @@ ext.junitJupiterVersion = '5.1.0'
 ext.log4jVersion = '2.9.0'
 ext.sat4jVersion = '2.3.5'
 
-sourceCompatibility = JavaVersion.VERSION_1_10
-targetCompatibility = JavaVersion.VERSION_1_10
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()

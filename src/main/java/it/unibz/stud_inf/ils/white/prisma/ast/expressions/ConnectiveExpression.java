@@ -80,7 +80,7 @@ public class ConnectiveExpression extends Expression {
 			if (!(e instanceof ConnectiveExpression)) {
 				return null;
 			}
-			var ce = (ConnectiveExpression) e;
+			ConnectiveExpression ce = (ConnectiveExpression) e;
 			if (connective.equals(ce.connective)) {
 				Expression cee = ce.compress();
 				if (cee instanceof ConnectiveExpression) {
@@ -154,7 +154,7 @@ public class ConnectiveExpression extends Expression {
 
 		// Push down negation (NNF) and eliminate double negation.
 		if (is(NOT)) {
-			final var subExpression = expressions.get(0);
+			final Expression subExpression = expressions.get(0);
 			if (subExpression instanceof Atom) {
 				return not(subExpression.normalize());
 			}
@@ -169,17 +169,17 @@ public class ConnectiveExpression extends Expression {
 
 		// Translate ITE into an equivalent conjunction.
 		if (is(ITE)) {
-			final var condition = expressions.get(0);
-			final var truthy = expressions.get(1);
-			final var falsy = expressions.get(2);
+			final Expression condition = expressions.get(0);
+			final Expression truthy = expressions.get(1);
+			final Expression falsy = expressions.get(2);
 			return and(
 				or(not(condition).normalize(), truthy.normalize()),
 				or(condition.normalize(), falsy.normalize())
 			);
 		}
 
-		final var left = expressions.get(0);
-		final var right = expressions.get(1);
+		final Expression left = expressions.get(0);
+		final Expression right = expressions.get(1);
 
 		switch (this.connective) {
 			case THEN:
@@ -229,7 +229,7 @@ public class ConnectiveExpression extends Expression {
 
 		if (is(NOT)) {
 			// NOT is easy since it delegates to the subExpression.
-			final var subExpression = expressions.get(0);
+			final Expression subExpression = expressions.get(0);
 
 			//if (!(subExpression instanceof Atom)) {
 			//	throw new IllegalStateException("Formula must be in negation normal form.");
@@ -253,7 +253,7 @@ public class ConnectiveExpression extends Expression {
 
 		// These three lines depend on the implementation of ArrayList.
 		if (is(OR)) {
-			final var clause = new VecInt(literals.size() + 1);
+			final VecInt clause = new VecInt(literals.size() + 1);
 			clause.push(notSelf);
 			for (Integer l : literals) {
 				clause.unsafePush(l);
@@ -288,10 +288,10 @@ public class ConnectiveExpression extends Expression {
 		// If this is a disjunction, continue under
 		// the assumption that this is a clause.
 		if (is(OR)) {
-			final var cnf = new ClauseAccumulator();
+			final ClauseAccumulator cnf = new ClauseAccumulator();
 			int[] cnfClause = new int[expressions.size()];
 			for (int i = 0; i < expressions.size(); i++) {
-				final var it = expressions.get(i);
+				final Expression it = expressions.get(i);
 
 				if (!it.isLiteral()) {
 					return null;

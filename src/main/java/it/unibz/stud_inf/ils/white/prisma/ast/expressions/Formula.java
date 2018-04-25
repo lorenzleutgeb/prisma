@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.BooleanConnective.AND;
 import static it.unibz.stud_inf.ils.white.prisma.ast.expressions.Expression.and;
@@ -95,7 +96,7 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 
 		final ClauseAccumulator facc = new ClauseAccumulator();
 
-		final var literals = connectiveExpression.getExpressions().stream().mapToInt(e -> e.tseitin(facc));
+		final IntStream literals = connectiveExpression.getExpressions().stream().mapToInt(e -> e.tseitin(facc));
 
 		if (connectiveExpression.getConnective().equals(AND)) {
 			literals.forEach(facc::add);
