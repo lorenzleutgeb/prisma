@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.Stack;
 
 import static it.unibz.stud_inf.ils.white.prisma.Mode.REPL;
 import static it.unibz.stud_inf.ils.white.prisma.util.Util.SET_COLLECTOR;
@@ -87,38 +88,85 @@ public class Main {
 		Formula f = new Formula();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
+		Stack<Formula> undoStack = new Stack<>();
+		undoStack.push(f);
+
 		// Maybe print the grammar here.
-		System.out.println(" \"<expression>\"  to  conjoin it with previous ones\n             \"\"  to  compute models\n        \"clear\"  to  start over\n         \"exit\"  to  exit");
+		System.out.println(
+			" \"<expression>\"  to  conjoin it with previous ones\n" +
+			"             \"\"  to  compute models\n" +
+			"        \"clear\"  to  start over\n" +
+			"         \"exit\"  to  exit\n" +
+			"    \"normalize\"  to  apply normalization\n" +
+			"  \"standardize\"  to  apply standardization\n" +
+			"         \"push\"  to  push down and reorder quantifiers\n" +
+			"       \"ground\"  to  ground the formula\n" +
+			"       \"dimacs\"  to  produce the CNF in DIMACS format\n" +
+			"         \"undo\"  to  undo your last operation\n"
+		);
 
 		try {
 			System.out.print("> ");
 			String ln;
+			boolean save;
 			while ((ln = reader.readLine()) != null) {
-				if (ln.isEmpty()) {
-					var it = f.accumulate().compress().computeModels().iterator();
+				save = false;
+				try {
+					if (ln.isEmpty()) {
+						var it = f.accumulate().compress().computeModels().iterator();
 
-					while (true) {
-						if (!it.hasNext()) {
-							System.out.println("UNSATISFIABLE");
-							break;
+						while (true) {
+							if (!it.hasNext()) {
+								System.out.println("UNSATISFIABLE");
+								break;
+							}
+
+							System.out.println(it.next().stream().collect(SET_COLLECTOR));
+
+							System.out.print("Search for more? [y|N] ");
+							ln = reader.readLine();
+
+							if (!ln.toLowerCase().startsWith("y")) {
+								break;
+							}
 						}
-
-						System.out.println(it.next().stream().collect(SET_COLLECTOR));
-
-						System.out.print("Search for more? [y|N] ");
-						ln = reader.readLine();
-
-						if (!ln.toLowerCase().startsWith("y")) {
-							break;
+					} else if (ln.toLowerCase().equals("clear")) {
+						f = new Formula();
+						save = true;
+					} else if (ln.toLowerCase().equals("exit")) {
+						System.exit(0);
+					} else if (ln.toLowerCase().equals("normalize")) {
+						f = f.normalize();
+						save = true;
+					} else if (ln.toLowerCase().equals("standardize")) {
+						f = f.normalize().standardize();
+						save = true;
+					} else if (ln.toLowerCase().equals("push")) {
+						f = f.normalize().standardize().pushQuantifiersDown();
+						save = true;
+					} else if (ln.toLowerCase().equals("ground")) {
+						f = f.normalize().standardize().pushQuantifiersDown().ground();
+						save = true;
+					} else if (ln.toLowerCase().equals("dimacs")) {
+						f.accumulate().compress().printDimacsTo(System.out);
+					} else if (ln.toLowerCase().equals("undo")) {
+						if (undoStack.size() == 1) {
+							System.out.println("Cannot undo last operation!");
 						}
+						undoStack.pop();
+						f = undoStack.pop();
+						System.out.println(f.toSingleExpression());
+						save = false;
+					} else {
+						f = f.add(Parser.parse(ln));
+						save = true;
 					}
-				} else if (ln.toLowerCase().equals("clear")) {
-					f = new Formula();
-				} else if (ln.toLowerCase().equals("exit")) {
-					System.exit(0);
-				} else {
-					f.add(Parser.parse(ln));
+				} catch (Exception e) {
+					e.printStackTrace(System.out);
+				}
+				if (save) {
 					System.out.println(f.toSingleExpression());
+					undoStack.push(f);
 				}
 
 				System.out.print("> ");

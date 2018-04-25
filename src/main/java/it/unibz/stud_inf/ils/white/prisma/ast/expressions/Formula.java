@@ -30,12 +30,18 @@ public class Formula implements Iterable<Expression>, Groundable<Formula, Formul
 		this(new ArrayList<>());
 	}
 
-	public void add(Expression expression) {
-		expressions.add(expression);
+	public Formula add(Expression expression) {
+		List<Expression> copy = new ArrayList<>(expressions.size() + 1);
+		copy.addAll(expressions);
+		copy.add(expression);
+		return new Formula(copy);
 	}
 
-	public void add(Formula formula) {
-		expressions.addAll(formula.expressions);
+	public Formula add(Formula formula) {
+		List<Expression> copy = new ArrayList<>(expressions.size() + formula.expressions.size());
+		copy.addAll(expressions);
+		copy.addAll(formula.expressions);
+		return new Formula(copy);
 	}
 
 	@Override

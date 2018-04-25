@@ -9,6 +9,7 @@ import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 import org.sat4j.core.VecInt;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -45,6 +46,11 @@ public class ConnectiveExpression extends Expression {
 		if (expressions.stream().anyMatch(Objects::isNull)) {
 			throw new NullPointerException();
 		}
+
+		if (is(OR) || is(AND)) {
+			expressions = new ArrayList<>(new HashSet<>(expressions));
+		}
+
 		this.expressions = unmodifiableList(expressions);
 		this.connective = connective;
 		assertArity();
