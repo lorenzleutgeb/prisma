@@ -58,8 +58,6 @@ dependencies {
 	// Set utilities and BiMap implementation.
 	compile group: 'com.google.guava', name: 'guava', version: '24.1-jre'
 
-	compile group: 'com.beust', name: 'jcommander', version: '1.72'
-
 	compile group: 'org.ow2.sat4j', name: 'org.ow2.sat4j.core',   version: "${sat4jVersion}"
 	compile group: 'org.ow2.sat4j', name: 'org.ow2.sat4j.maxsat', version: "${sat4jVersion}"
 

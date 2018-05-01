@@ -1,6 +1,5 @@
 package it.unibz.stud_inf.ils.white.prisma;
 
-import com.beust.jcommander.JCommander;
 import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Formula;
 import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.parser.Parser;
@@ -32,13 +31,10 @@ public class Main {
 		" powered by ANTLR.org and SAT4J.org\n";
 
 	public static void main(String[] args) throws IOException {
-		Options options = new Options();
-
-		JCommander jc = JCommander.newBuilder().programName("prisma").addObject(options).build();
-		jc.parse(args);
+		Options options = new Options(args);
 
 		if (options.help) {
-			jc.usage();
+			options.printHelp();
 			return;
 		}
 
