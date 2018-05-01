@@ -29,7 +29,7 @@ We present an implementation of an optimizing compiler that translates formulae 
 
 In this brief report we want expand on the presentation given in the laboratory session. Please reconsider our slides, available via \url{https://lorenz.leutgeb.xyz/tmp/prisma-beam.pdf}. The content is augmented by pointers to the codebase (by means of class names and method names), instructions on how to obtain an executable version of Prisma, and some guidance on how to run it.
 
-This report is structured as follows: In Section \ref{sec:code} we explain how to obtain the source code of our implementation in order to point to specific classes and methods in Section \ref{sec:arch} where we give a sketch of the architecture. Section \ref{sec:buildnrun} is concerned with getting Prisma to run, by building yourself (Section \ref{sec:build}) or by using a pre-built JAR (Section \ref{sec:run}). Then, in Section \ref{sec:usage}, we introduce commandline options for Prisma. Finally, in Section \ref{sec:output} we describe the output format.
+This report is structured as follows: In Section \ref{sec:code} we explain how to obtain the source code of our implementation in order to point to specific classes and methods in Section \ref{sec:arch} where we give a sketch of the architecture. Section \ref{sec:buildnrun} is concerned with getting Prisma to run, by building yourself or by using a pre-built JAR/native binary. Then, in Section \ref{sec:usage}, we introduce commandline options for Prisma. Finally, in Section \ref{sec:output} we describe the output format.
 
 \section{Codebase}
 \label{sec:code}
@@ -74,8 +74,8 @@ We first explain the prerequisites to run Prisma and how to obtain an executable
 
 Prisma can be built using ANTLR (to generate the parser) and \texttt{javac}, the standard Java compiler. However, we strongly recommend the build tool Gradle, avilable from \url{https://gradle.org}, which was used to develop Prisma. In order to build Prisma the following two Gradle tasks need to be executed: \texttt{generateGrammarSource} (to generate the parser) and \texttt{build} (or optionally \texttt{bundleJar} to obtain a packaged JAR file).
 
-\subsection{Running a Pre-Built Executable Version}
-\label{sec:run}
+\subsection{Running a Pre-Built JAR}
+\label{sec:runjar}
 
 \begin{enumerate}
 	\item{Ensure that a Java Runtime Environment in version 8 or higher is installed on your machine. To do this, you may run the following command:
@@ -84,7 +84,7 @@ Prisma can be built using ANTLR (to generate the parser) and \texttt{javac}, the
 	\end{verbatim}
 	This should print a version number. For example: \texttt{java~version~"10"} (Java 10) or \texttt{java~version~"1.8.0\_162"} (Java 8u162), both of which are suitable to run Prisma. In case the command is not found, please first install a Java Runtime Environment (there are numerous tutorials and packages for many Linux distributions available online).
 	}
-	\item{Download a packaged version of Prisma from
+	\item{Download a pre-built version of Prisma from
 	\begin{center}
 	\url{https://lorenz.leutgeb.xyz/tmp/prisma.jar}
 	\end{center} and let the location of the file be denoted as \texttt{\$PRISMA} in the following.}
@@ -93,6 +93,25 @@ Prisma can be built using ANTLR (to generate the parser) and \texttt{javac}, the
 	$ java -jar $PRISMA
 	\end{verbatim}
 	}
+
+\subsection{Running a Pre-Built x86-64 Linux Executable}
+\label{sec:runelf}
+
+\begin{enumerate}
+\item{Ensure that you have a 64-bit Linux running. You'll also need the following shared libraries (\texttt{ldd} output for your convenience):
+	\begin{verbatim}
+	linux-vdso.so.1       libcrypt.so.1
+	libdl.so.2            libc.so.6
+	libpthread.so.0       /lib64/ld-linux-x86-64.so.2
+	libz.so.1             libfreebl3.so
+	librt.so.1
+	\end{verbatim}}
+\item{Download a pre-built version of Prisma from
+	\begin{center}
+	\url{https://lorenz.leutgeb.xyz/tmp/prisma}
+	\end{center} and let the location of the file be denoted as \texttt{\$PRISMA} in the following.}
+	\item{Now don't forget to \texttt{chmod u+x \$PRISMA} and you are good to go!}
+\end{enumerate}
 
 \section{Commandline Usage}
 \label{sec:usage}
@@ -108,35 +127,37 @@ Prisma offers four different modes of operation, which roughly correspond to the
 
 \subsection{Examples}
 
+For the examples we assume that you have \texttt{prisma} on your path pointing to the Prisma executable or to a script that invokes the JAR. Alternatively you may replace \texttt{prisma} below by \texttt{java -jar \$PRISMA}.
+
 To read a formula from \texttt{f.in} and print an equisatisfisble formula in CNF:
 
 	\begin{verbatim}
-	$ java -jar $PRISMA -mode CNF f.in
+	$ prisma -mode CNF f.in
 	\end{verbatim}
 
 To read a formula from \texttt{f.in} and print its DIMACS representation to \texttt{f.dimacs}:
 
 	\begin{verbatim}
-	$ java -jar $PRISMA -mode DIMACS f.in f.dimacs
+	$ prisma -mode DIMACS f.in f.dimacs
 	\end{verbatim}
 
 
 To read a formula from standard input and write its DIMACS representation to standard output:
 
 	\begin{verbatim}
-	$ java -jar $PRISMA -mode DIMACS
+	$ prisma -mode DIMACS
 	\end{verbatim}
 	
 To compute at most 10 models for a formula in \texttt{f.in} and print models to standard output:
 
 	\begin{verbatim}
-	$ java -jar $PRISMA -mode SOLVE -models 10 f.in
+	$ prisma -mode SOLVE -models 10 f.in
 	\end{verbatim}
 
 To interactively experiment:
 
 	\begin{verbatim}
-	$ java -jar $PRISMA
+	$ prisma $PRISMA
 	\end{verbatim}
 	
 \section{Output Format}
@@ -156,7 +177,7 @@ Which indicate that the propositional variable denoted by the integer number rep
 
 \begin{verbatim}
 $ echo 'forall $x in {s, t} p($x) | q($x)' \
-| java -jar prisma.jar -mode DIMACS    
+| prisma -mode DIMACS
 c Generated by Prisma
 c Team White
 c map 1 p(s)
@@ -175,7 +196,7 @@ The output of this mode is inspired by the ASP solver DLV. In case the input for
 
 \begin{verbatim}
 	$ echo 'forall $x in {s, t} p($x) | q($x)' \
-	| java -jar prisma.jar -mode SOLVE -models 9
+	| prisma -mode SOLVE -models 9
 {p(t), q(s)}
 {p(t), q(s), q(t)}
 {q(s), q(t)}
@@ -189,7 +210,7 @@ The output of this mode is inspired by the ASP solver DLV. In case the input for
 
 \begin{verbatim}
 	$ echo 'true & false' \
-	| java -jar prisma.jar -mode SOLVE
+	| prisma -mode SOLVE
 UNSATISFIABLE
 \end{verbatim}
 
