@@ -1,6 +1,5 @@
 package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
-import com.google.common.collect.Sets;
 import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 import it.unibz.stud_inf.ils.white.prisma.ast.terms.Arg;
@@ -91,11 +90,13 @@ public class Atom extends Expression {
 
 	@Override
 	public Set<Variable> getOccurringVariables() {
-		final Set<Variable> base = predicate.getOccurringVariables();
-		return args
+		final Set<Variable> base = new HashSet<>();
+		base.addAll(predicate.getOccurringVariables());
+		args
 			.stream()
 			.map(Arg::getOccurringVariables)
-			.reduce(base, Sets::union);
+			.forEach(base::addAll);
+		return base;
 	}
 
 	@Override

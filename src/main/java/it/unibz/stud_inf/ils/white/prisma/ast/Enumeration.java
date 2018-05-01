@@ -1,8 +1,8 @@
 package it.unibz.stud_inf.ils.white.prisma.ast;
 
-import com.google.common.collect.Sets;
 import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,10 +25,13 @@ public class Enumeration<U extends Groundable<T,U>, T> extends Domain<T> {
 
 	@Override
 	public Set<Variable> getOccurringVariables() {
-		return elements
+		final Set<Variable> base = new HashSet<>();
+		elements
 			.stream()
 			.map(Groundable::getOccurringVariables)
-			.reduce(emptySet(), Sets::union);
+			.forEach(base::addAll);
+		return base;
+
 	}
 
 	@Override

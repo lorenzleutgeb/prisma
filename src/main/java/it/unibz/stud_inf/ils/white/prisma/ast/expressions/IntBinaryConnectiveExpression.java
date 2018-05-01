@@ -6,10 +6,9 @@ import it.unibz.stud_inf.ils.white.prisma.ast.terms.IntExpression;
 import it.unibz.stud_inf.ils.white.prisma.ast.terms.IntNumberExpression;
 import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static com.google.common.collect.Sets.union;
 
 public class IntBinaryConnectiveExpression extends IntExpression {
 	private final IntExpression left;
@@ -86,7 +85,10 @@ public class IntBinaryConnectiveExpression extends IntExpression {
 
 	@Override
 	public Set<Variable> getOccurringVariables() {
-		return union(left.getOccurringVariables(), right.getOccurringVariables());
+		Set<Variable> result = new HashSet<>(left.getOccurringVariables().size() + right.getOccurringVariables().size());
+		result.addAll(left.getOccurringVariables());
+		result.addAll(right.getOccurringVariables());
+		return result;
 	}
 
 	@Override

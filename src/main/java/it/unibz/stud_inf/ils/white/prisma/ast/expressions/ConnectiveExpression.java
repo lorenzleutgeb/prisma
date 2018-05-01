@@ -1,6 +1,5 @@
 package it.unibz.stud_inf.ils.white.prisma.ast.expressions;
 
-import com.google.common.collect.Sets;
 import it.unibz.stud_inf.ils.white.prisma.ast.Groundable;
 import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
@@ -399,17 +398,21 @@ public class ConnectiveExpression extends Expression {
 
 	@Override
 	public Set<Variable> getOccurringVariables() {
-		return expressions
+		final Set<Variable> base = new HashSet<>();
+		expressions
 			.stream()
 			.map(Groundable::getOccurringVariables)
-			.reduce(emptySet(), Sets::union);
+			.forEach(base::addAll);
+		return base;
 	}
 
 	@Override
 	public Set<Set<Variable>> getRelatedVariables() {
-		return expressions
+		final Set<Set<Variable>> base = new HashSet<>();
+		expressions
 			.stream()
 			.map(Expression::getRelatedVariables)
-			.reduce(emptySet(), Sets::union);
+			.forEach(base::addAll);
+		return base;
 	}
 }

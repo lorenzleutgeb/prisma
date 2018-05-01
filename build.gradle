@@ -55,9 +55,6 @@ dependencies {
 	// Re-introduce antlr4-runtime as compile dependency.
 	compile group: 'org.antlr', name: 'antlr4-runtime', version: "${antlrVersion}"
 
-	// Set utilities and BiMap implementation.
-	compile group: 'com.google.guava', name: 'guava', version: '24.1-jre'
-
 	compile group: 'org.ow2.sat4j', name: 'org.ow2.sat4j.core',   version: "${sat4jVersion}"
 	compile group: 'org.ow2.sat4j', name: 'org.ow2.sat4j.maxsat', version: "${sat4jVersion}"
 
@@ -67,8 +64,6 @@ dependencies {
 
 	testRuntime group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4jVersion}"
 	testRuntime group: 'org.apache.logging.log4j', name: 'log4j-jul',  version: "${log4jVersion}"
-
-	//compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.1.0'
 }
 
 compileJava {

@@ -5,12 +5,11 @@ import it.unibz.stud_inf.ils.white.prisma.ast.Substitution;
 import it.unibz.stud_inf.ils.white.prisma.ast.Variable;
 import it.unibz.stud_inf.ils.white.prisma.util.Counter;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import static com.google.common.collect.Sets.union;
 
 public class IntExpressionRange extends Domain<IntNumberExpression> {
 	private final IntExpression min;
@@ -31,7 +30,10 @@ public class IntExpressionRange extends Domain<IntNumberExpression> {
 
 	@Override
 	public Set<Variable> getOccurringVariables() {
-		return union(min.getOccurringVariables(), max.getOccurringVariables());
+		Set<Variable> result = new HashSet<>(min.getOccurringVariables().size() + max.getOccurringVariables().size());
+		result.addAll(min.getOccurringVariables());
+		result.addAll(max.getOccurringVariables());
+		return result;
 	}
 
 	@Override
