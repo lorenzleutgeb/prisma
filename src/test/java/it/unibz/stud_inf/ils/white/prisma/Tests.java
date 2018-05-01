@@ -5,6 +5,7 @@ import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.cnf.DIMACSCNF;
 import it.unibz.stud_inf.ils.white.prisma.parser.Parser;
 import org.antlr.v4.runtime.CharStreams;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -94,7 +95,7 @@ class Tests {
 
 	@Test
 	void my() {
-		solveAndAssert("true & false", -1, -1, -1);
+		solveAndAssert("exists $x in {a, b} (~exists $y in {c, d} (p($x) & p($y)))", -1, -1, -1);
 	}
 
 	void solveAndAssert(String formula, int vars, int clauses, int models) {
@@ -131,6 +132,7 @@ class Tests {
 	}
 
 	@Test
+	@Disabled
 	void parseExplosion() {
 		for (int n = 3; n < 11; n++) {
 			final String in = String.join(" ^ ", Collections.nCopies(n, "p"));
