@@ -1,0 +1,1 @@
+forall $X in {a,b} exists $Y in {c,d} p($X,$Y)

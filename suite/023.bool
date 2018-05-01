@@ -1,0 +1,1 @@
+exists $y in {a,b,c} forall $x in {a,b,c} (q | (p($x) | p($y)))

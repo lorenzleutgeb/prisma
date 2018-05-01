@@ -1,0 +1,1 @@
+forall #X in [1...3] p(#X)

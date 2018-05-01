@@ -1,0 +1,1 @@
+exists $x in {a,b} forall $y in {c,d} (p($x) & p($y))

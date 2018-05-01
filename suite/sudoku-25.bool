@@ -1,0 +1,64 @@
+/* Encoding of Sudoku problem
+
+    variable v(i,j,d) true iff the cell in row i, column j contains the digit d
+
+*/
+
+// every cell contains a digit
+(forall #i in [0...24]
+    (forall #j in [0...24]
+        (exists #d in [0...24]
+            v(#i,#j,#d)
+        )
+    )
+)
+
+// every cell contains only a digit
+(forall #i in [0...24]
+    (forall #j in [0...24]
+        (forall #d in [0...23]
+            (forall #d1 in [#d+1...24]
+                (v(#i,#j,#d) -> ~v(#i,#j,#d1))
+            )
+        )
+    )
+)
+
+// every row contains each digit once
+(forall #i in [0...24]
+    (forall #d in [0...24]
+        (forall #j in [0...24]
+            (forall #j1 in [#j+1...24]
+                (v(#i,#j,#d) -> ~v(#i,#j1,#d))
+            )
+        )
+    )
+)
+
+// every column contains each digit once
+(forall #j in [0...24]
+    (forall #d in [0...24]
+        (forall #i in [0...23]
+            (forall #i1 in [#i+1...24]
+                (v(#i,#j,#d) -> ~v(#i1,#j,#d))
+            )
+        )
+    )
+)
+
+// each 3x3 square contains each digit once
+(forall #d in [0...24]
+    (forall #ro in [0...4]
+        (forall #co in [0...4]
+            (forall #i in [0...23]
+                (forall #i1 in [#i+1...24]
+                    (v(((5*#ro)+(#i/5)), ((5*#co)+(#i%5)), #d) -> ~v(((5*#ro) + (#i1/5)), ((5*#co)+(#i1%5)), #d))
+                )
+            )
+        )
+    )
+)
+
+// partial assignment
+
+( v(0,8,8) & v(2,1,5) & v(2,6,1) & v(5,8,2) & v(7,3,0) & v(7,4,8) & v(7,5,4) & v(8,4,6) )

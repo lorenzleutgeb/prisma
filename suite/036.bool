@@ -1,0 +1,1 @@
+forall @X in {a,b} ~(@X & (exists #Y in [1...3] (t(#Y) -> q(#Y))))

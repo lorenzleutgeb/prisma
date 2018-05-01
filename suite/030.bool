@@ -1,0 +1,1 @@
+(forall $x in {a,b} (exists $y in {a,b} phi($y)) | ((exists $z in {a,b} psi($z)) -> rho($x)))
