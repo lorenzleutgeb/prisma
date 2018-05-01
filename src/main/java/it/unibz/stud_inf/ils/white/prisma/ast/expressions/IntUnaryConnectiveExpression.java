@@ -25,6 +25,11 @@ public class IntUnaryConnectiveExpression extends IntExpression {
 		return new IntUnaryConnectiveExpression(connective, subExpression.standardize(map, generator));
 	}
 
+	@Override
+	public String toString() {
+		return connective.asString + subExpression.toString();
+	}
+
 	public enum Connective {
 		ABS("|"),
 		NEG("-");

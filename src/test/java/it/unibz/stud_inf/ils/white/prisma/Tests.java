@@ -4,6 +4,7 @@ import it.unibz.stud_inf.ils.white.prisma.ast.expressions.Formula;
 import it.unibz.stud_inf.ils.white.prisma.cnf.ClauseAccumulator;
 import it.unibz.stud_inf.ils.white.prisma.cnf.DIMACSCNF;
 import it.unibz.stud_inf.ils.white.prisma.parser.Parser;
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -83,22 +84,26 @@ class Tests {
 
 	@ParameterizedTest
 	@MethodSource("groundInstances")
-	void solveGround(String formula, int vars, int clauses, int models) {
+	void solveGround(String formula, int vars, int clauses, int models) throws IOException {
 		solveAndAssert(formula, vars, clauses, models);
 	}
 
 	@ParameterizedTest
 	@MethodSource("nonGroundInstances")
-	void solveNonGround(String formula, int vars, int clauses, int models) {
+	void solveNonGround(String formula, int vars, int clauses, int models) throws IOException {
 		solveAndAssert(formula, vars, clauses, models);
 	}
 
 	@Test
-	void my() {
+	void my() throws IOException {
 		solveAndAssert("exists $x in {a, b} (~exists $y in {c, d} (p($x) & p($y)))", -1, -1, -1);
 	}
 
-	void solveAndAssert(String formula, int vars, int clauses, int models) {
+	void solveAndAssert(String formula, int vars, int clauses, int models) throws IOException {
+		solveAndAssert(CharStreams.fromString(formula), vars, clauses, models);
+	}
+
+	void solveAndAssert(CharStream formula, int vars, int clauses, int models) throws IOException {
 		Formula f = Parser.parse(formula);
 		System.out.println("Input:                 " + f);
 		System.out.println("Normalized (&/|/~):    " + (f = f.normalize()));
@@ -132,13 +137,12 @@ class Tests {
 	}
 
 	@Test
-	@Disabled
 	void parseExplosion() {
 		for (int n = 3; n < 11; n++) {
 			final String in = String.join(" ^ ", Collections.nCopies(n, "p"));
 			final String out = Parser.parse(in).accumulate().toString();
 			final int ratio = out.length() / in.length();
-			assertTrue(29 < ratio && ratio < 60, "CNF does not explode in size.");
+			assertTrue(ratio < 60, "CNF does not explode in size.");
 		}
 	}
 
@@ -148,5 +152,11 @@ class Tests {
 		Formula f = Parser.parse(CharStreams.fromStream(getClass().getResourceAsStream(fileName)));
 		ClauseAccumulator cnf = f.accumulate();
 		System.out.println(cnf.getVariableCount() + " " + cnf.getClauseCount());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"/zebra.bool"})
+	void instanceDetail(String fileName) throws IOException {
+		solveAndAssert(CharStreams.fromStream(getClass().getResourceAsStream(fileName)), -1, -1, -1);
 	}
 }

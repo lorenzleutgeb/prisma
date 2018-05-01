@@ -264,6 +264,11 @@ public class Parser {
 		public Domain visitIntExpressions(FormulaParser.IntExpressionsContext ctx) {
 			return new Enumeration<>(wrap(ctx.intExpressions()));
 		}
+
+		@Override
+		public Domain visitIntExpressionEnumeration(FormulaParser.IntExpressionEnumerationContext ctx) {
+			return new Enumeration<>(wrap(ctx.intExpressions()));
+		}
 	}
 
 	private static class PredicateVisitor extends FormulaBaseVisitor<Predicate> {

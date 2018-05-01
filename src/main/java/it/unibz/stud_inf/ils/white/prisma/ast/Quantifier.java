@@ -15,8 +15,11 @@ public class Quantifier<T> {
 	private final Domain<T> domain;
 
 	public Quantifier(String name, Variable<T> variable, Domain<T> domain) {
-		// TODO: Account for UTF-8.
-		this.exists = "exists".equals(name.toLowerCase());
+		if (variable == null || domain == null) {
+			throw new NullPointerException();
+		}
+
+		this.exists = "exists".equals(name.toLowerCase()) || "∃".equals(name);
 		this.variable = variable;
 		this.domain = domain;
 	}

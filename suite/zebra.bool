@@ -1,0 +1,43 @@
+/*
+             1          2             3           4             5
+Color        Yellow     Blue          Red         Ivory         Green
+Nationality  Norwegian  Ukrainian     Englishman  Spaniard      Japanese
+Drink        Water      Tea           Milk        Orange juice  Coffee
+Smoke        Kools      Chesterfield  Old Gold    Lucky Strike  Parliament
+Pet          Fox        Horse         Snails      Dog           Zebra
+*/
+
+drk(3,3)  //  8 Milk is drunk in the middle house.
+nat(1,1)  //  9 The Norwegian lives in the first house.
+col(2,2)  // 14 The Norwegian lives next to the blue house.
+
+forall #x in [1...5]
+( (nat(#x,3) -> col(#x,3))  //  1 The Englishman lives in the red house.
+& (nat(#x,4) -> pet(#x,4))  //  2 The Spaniard owns the dog.
+& (drk(#x,5) -> col(#x,5))  //  3 Coffee is drunk in the green house.
+& (nat(#x,2) -> drk(#x,2))  //  4 The Ukrainian drinks tea.
+& (cig(#x,3) -> pet(#x,3))  //  6 The Old Gold smoker owns snails.
+& (cig(#x,1) -> col(#x,1))  //  7 Kools are smoked in the yellow house.
+& (cig(#x,4) -> drk(#x,4))  // 12 The Lucky Strike smoker drinks orange juice.
+& (nat(#x,5) -> cig(#x,5))  // 13 The Japanese smokes Parliaments.
+)
+
+forall #x in [1...4] (col(#x,4) -> col(#x+1,5))  //  5 The green house is immediately to the right of the ivory house.
+
+(
+        exists #x in [1...4] (cig(#x,2) & pet(#x+1,1))
+    |
+        exists #x in [2...5] (cig(#x,2) & pet(#x-1,1))
+)
+// 10 The man who smokes Chesterfields lives in the house next to the man with the fox.
+
+(
+        exists #x in [1...4] (cig(#x,1) & pet(#x+1,2))
+    |
+        exists #x in [2...5] (cig(#x,1) & pet(#x-1,2))
+)
+// 11 Kools are smoked in the house next to the house where the horse is kept.
+
+
+forall @p in { cig, col, drk, nat, pet } forall #x in [1...5] exists #y in [1...5] @p(#x,#y)
+forall @p in { cig, col, drk, nat, pet } forall #x in [1...4] forall #y in [#x+1...5] forall #z in [1...5] @p(#x,#z) -> ~@p(#y,#z)
