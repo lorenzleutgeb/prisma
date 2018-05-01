@@ -6,18 +6,19 @@
 
 \usepackage{hyperref}
 \usepackage{bookmark}
+\usepackage{csquotes}
 
-\title{SAT Solvers Front-end}
-\subtitle{Team White Report}
-\author{Filippo~De~Bortoli \and Aneta~Koleva \and Lorenz~Leutgeb}
-\institute{Universit\'a degli Studi di Bolzano\\[2mm] \texttt{\{\href{mailto:filippo.debortoli@stud-inf.unibz.it}{filippo.debortoli},\href{mailto:aneta.koleva@stud-inf.unibz.it}{aneta.koleva},\href{mailto:lorenz.leutgeb@stud-inf.unibz.it}{lorenz.leutgeb}\}\newline @stud-inf.unibz.it}}
+\title{Prisma: A SAT Solver Front-End}
+\subtitle{Project Report}
+\author{Team White\\[2mm]Filippo~De~Bortoli \and Aneta~Koleva \and Lorenz~Leutgeb}
+\institute{Free University of Bozen-Bolzano\\[3mm] \texttt{\{\href{mailto:filippo.debortoli@stud-inf.unibz.it}{filippo.debortoli},\href{mailto:aneta.koleva@stud-inf.unibz.it}{aneta.koleva},\href{mailto:lorenz.leutgeb@stud-inf.unibz.it}{lorenz.leutgeb}\}\newline @stud-inf.unibz.it}}
 
 \begin{document}
 
   \maketitle
 
   \begin{abstract}
-    
+We present an implementation of an optimizing compiler that translates formulae in a high-level language of logical expressions (standard Boolean connectives, quantification of integer expressions, symbolic terms and predicates over finite domains) into ground formulae in CNF. It interfaces with a SAT solver to compute models where propositions correspond to atoms in the high-level input. The resulting Java program is called \enquote{Prisma}.
   \end{abstract}
 
   \input{sections/introduction}
@@ -25,4 +26,39 @@
   \input{sections/algorithms}
   \input{sections/evaluation}
   \input{sections/conclusion}
+
+\section{Running Prisma}
+
+We first explain the prerequisites to running Prisma and how to obtain an executable version in the following. Then, commandline arguments are described.
+
+\subsection{Prerequisites and Obtaining an Executable Version}
+\begin{enumerate}
+	\item{Ensure that a Java Runtime Environment in version 8 or higher is installed on your machine. To do this, you may run the following command:
+	\begin{verbatim}
+	$ java -version
+	\end{verbatim}
+	This should print a version number. For example: \texttt{java~version~"10"} (Java 10) or \texttt{java~version~"1.8.0\_162"} (Java 8u162), both of which are suitable to run Prisma. In case the command is not found, please first install a Java Runtime Environment (there are numerous tutorials and packages for many Linux distributions available online).
+	}
+	\item{Download a packaged version of Prisma from
+	\begin{center}
+	\url{https://lorenz.leutgeb.xyz/tmp/prisma.jar}
+	\end{center} and let the location of the file be denoted as \texttt{\$PRISMA} in the following.}
+	\item{You may run Prisma as follows:
+	\begin{verbatim}
+	$ java -jar $PRISMA
+	\end{verbatim}
+	}
+
+\subsection{Commandline Arguments}
+
+Prisma offers four different modes of operation, which roughly correspond to the type of output it is expected to emit:
+
+\begin{description}
+	\item[\texttt{CNF}]{Emit a formula that is equisatisfiable with the input formula in the same language as the input languge.}
+	\item[\texttt{DIMACS}]{Emit a SAT instance in DIMACS format, including comments that encode which propositional variable maps to which high-level atom.}
+	\item[\texttt{SOLVE}]{Print models of the input formula, or \texttt{UNSATISFIABLE} if there are none.}
+	\item[\texttt{REPL} \textnormal{(default)}]{Starts a Read Evaluate Print Loop (REPL) for more fine-grained interaction scenarios.}
+\end{description}
+
+\end{enumerate}
 \end{document}
