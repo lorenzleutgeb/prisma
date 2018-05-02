@@ -10,11 +10,15 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -158,5 +162,29 @@ class Tests {
 	@ValueSource(strings = {"/zebra.bool"})
 	void instanceDetail(String fileName) throws IOException {
 		solveAndAssert(CharStreams.fromStream(getClass().getResourceAsStream(fileName)), -1, -1, -1);
+	}
+
+
+	@ParameterizedTest
+	@CsvSource({
+		"2, 2,  2", // 2!
+		"3, 2,  0",
+		"2, 3,  6", // 2! * 3
+		"3, 3,  6", // 3!
+		"4, 3,  0",
+		"3, 4, 24", // 3! * 4
+		"4, 4, 24", // 4!
+		"3, 5, 60", // 3! * 5 * 2
+		"2, 5, 20"  // ?
+	})
+	void php(int pigeons, int holes, int models) throws IOException {
+		solveAndAssert(
+			"forall #p in [1..." + pigeons + "] exists #h in [1..." + holes + "] " + "a(#p,#h) \n" +
+			"forall #p1 in [1..." + (pigeons - 1) + "] forall #p2 in [#p1+1..." + pigeons + "] forall #h in [1..." + holes + "] (a(#p1,#h) -> ~a(#p2,#h)) \n" +
+			"forall #h1 in [1..." + (holes - 1) + "] forall #h2 in [#h1+1..." + holes + "] forall #p in [1..." + pigeons + "] (a(#p,#h1) -> ~a(#p,#h2))",
+			pigeons * holes,
+			-1,
+			models
+		);
 	}
 }
