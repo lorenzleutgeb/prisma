@@ -1,0 +1,92 @@
+ontable(0,a)
+ontable(0,b)
+~ontable(0,c)
+on(0,c,a)
+~on(0,a,a)
+~on(0,a,b)
+~on(0,a,c)
+~on(0,b,a)
+~on(0,b,b)
+~on(0,b,c)
+~on(0,c,b)
+~on(0,c,c)
+~clear(0,a)
+clear(0,b)
+clear(0,c)
+
+// on(2,a,b)
+// on(2,b,c)
+
+on(3,a,b)
+on(3,b,c)
+
+// ~on(2,a,b) | ~on(2,b,c) // no plans of length 2
+
+forall #x in [0...3]
+forall #y in {a,b,c} (~on(#x,$y,$y))
+
+
+
+// Mutual exclusion of actions
+forall #x in [0...2]
+forall $y in {a,b,c}
+forall $z in {a,b,c}
+forall $w in {a,b,c}
+forall $t in {a,b,c}
+forall $q in {a,b,c} (
+  (~move(#x, $y, $z, $w) | ~totable(#x, $t, $q)) &
+  (~move(#x, $y, $z, $w) | ~fromtable(#x, $t, $q)) &
+  (~fromtable(#x, $y, $z) | ~totable(#x, $w, $t))
+)
+
+// Actions
+forall #x in [0...2]
+forall $y in {a,b,c}
+forall $z in {a,b,c}
+forall $w in {a,b,c} (
+  move(#x,$y,$z,$w) -> (clear(#x,$y) & clear(#x,$w) & on(#x,$y,$z) & on(#x+1,$y,$w) & clear(#x+1,$z) & ~clear(#x+1,$w) & ~on(#x+1,$y,$z))
+)
+
+forall #x in [0...2]
+forall $y in {a,b,c}
+forall $z in {a,b,c} (
+    totable(#x,$y,$z) -> (clear(#x,$y) & on(#x,$y,$z) & ontable(#x+1,$y) & clear(#x+1,$z) & ~on(#x+1,$y,$z))
+)
+
+forall #x in [0...2]
+forall $y in {a,b,c}
+forall $z in {a,b,c} (
+    fromtable(#x,$y,$z) -> (clear(#x,$y) & clear(#x,$z) & ontable(#x,$y) & on(#x+1,$y,$z) & ~clear(#x+1,$z) & ~ontable(#x+1,$y))
+)
+
+// Frame axioms
+forall #x in [0...2]
+forall $y in {a,b,c} (
+  (
+    (~ontable(#x,$y) & ontable(#x+1,$y)) -> (exists $z in {a,b,c} (totable(#x,$y,$z)))
+  ) &
+  (
+    (ontable(#x,$y) & ~ontable(#x+1,$y)) -> (exists $z in {a,b,c} (fromtable(#x,$y,$z)))
+  )
+)
+
+forall #x in [0...2]
+forall $y in {a,b,c}
+forall $z in {a,b,c} (
+  (
+    (~on(#x,$y,$z) & on(#x+1,$y,$z)) -> ((exists $w in {a,b,c} (move(#x,$y,$w,$z))) | fromtable(#x,$y,$z))
+  ) &
+  (
+    (on(#x,$y,$z) & ~on(#x+1,$y,$z)) -> ((exists $w in {a,b,c} (move(#x,$y,$z,$w))) | totable(#x,$y,$z))
+  )
+)
+
+forall #x in [0...2]
+forall $y in {a,b,c} (
+  (
+    (~clear(#x,$y) & clear(#x+1,$y)) -> ((exists $z in {a,b,c} exists $w in {a,b,c} (move(#x,$y,$z,$w))) | (exists $z in {a,b,c} (totable(#x,$z,$y))))
+  ) &
+  (
+    (clear(#x,$y) & ~clear(#x+1,$y)) -> ((exists $z in {a,b,c} exists $w in {a,b,c} (move(#x,$z,$y,$w))) | (exists $z in {a,b,c} (fromtable(#x,$z,$y))))
+  )
+)
