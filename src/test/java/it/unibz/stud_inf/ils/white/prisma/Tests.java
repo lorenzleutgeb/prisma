@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -121,7 +122,6 @@ class Tests {
 		System.out.println("CNF follows:");
 		System.out.println(comp);
 		System.out.println("Models follow:");
-		comp.printModelsTo(System.out, Long.MAX_VALUE);
 
 		if (vars >= 0) {
 			assertEquals(vars, comp.getVariableCount(), "Number of Variables");
@@ -130,7 +130,12 @@ class Tests {
 			assertEquals(clauses, comp.getClauseCount(), "Number of Clauses");
 		}
 		if (models >= 0) {
-			assertEquals(models, comp.computeModels().count(), "Number of Models");
+			Stream<SortedSet<String>> stream = comp.computeModels();
+			if (models > 0) {
+				stream = stream.limit(models);
+			}
+			stream = stream.peek(x -> System.out.println(x.toString()));
+			assertEquals(models, stream.count(), "Number of Models");
 		}
 	}
 
@@ -175,7 +180,8 @@ class Tests {
 		"3, 4, 24", // 3! * 4
 		"4, 4, 24", // 4!
 		"3, 5, 60", // 3! * 5 * 2
-		"2, 5, 20"  // ?
+		"2, 5, 20",  // ?
+		"10, 10, 20"  // ?
 	})
 	void php(int pigeons, int holes, int models) throws IOException {
 		solveAndAssert(
