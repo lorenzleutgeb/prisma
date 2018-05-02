@@ -1,0 +1,23 @@
+/*
+n- number of holes, n+1- number of pigeons
+varible p(i,j)-true if pigeon i is in hole j
+
+example here for n=2
+*/
+
+
+//Each pigeon can be in any box
+		(forall #i in [1...3]
+		    (forall #j in [1...2]
+		        p(#i,#j)
+            )
+        )
+
+//In each hole only one pigeon can be placed
+        (forall #i in [1...2]
+            (forall #j in [1...3]
+                (forall #k in [#i+1...3]
+                    (p(#i,#j) -> ~p(#k,#j))
+                )
+            )
+        )
