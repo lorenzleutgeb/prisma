@@ -15,7 +15,7 @@ TEAMS=(blue white)
 #   applicable).
 
 function blue() {
-	flylo cnf < $1 > $2 2> $4
+	yunis cnf < $1 > $2 2> $4
 }
 
 function white() {
